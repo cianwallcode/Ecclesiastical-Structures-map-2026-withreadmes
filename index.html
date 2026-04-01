@@ -1,80 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><title>SiteVault | 2026 Analysis</title>
+    <meta charset="UTF-8"><title>SiteVault | Ecclesiastical Analysis 2026</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        :root { --accent: #3498db; --dark: #2c3e50; --bg: #f4f7f6; }
-        body { margin: 0; font-family: sans-serif; background: var(--bg); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        nav { background: white; padding: 15px 30px; display: flex; justify-content: space-between; border-bottom: 1px solid #ddd; z-index: 1000; }
-        .logo { font-weight: 900; font-size: 1.5em; text-transform: uppercase; }
-        .nav-btns button { margin-left: 10px; padding: 10px 20px; border-radius: 20px; border: 1px solid #ddd; cursor: pointer; background: white; }
-        .btn-active { background: var(--dark) !important; color: white !important; }
-        .page { flex-grow: 1; display: none; position: relative; }
+        :root { --accent: #3498db; --dark: #1a1a1a; --bg: #f8f9fa; --card-bg: #ffffff; }
+        body { margin: 0; font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: #333; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        /* Professional Navigation */
+        nav { background: var(--dark); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; color: white; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .logo { font-weight: 800; font-size: 1.4em; letter-spacing: -0.5px; text-transform: uppercase; }
+        .nav-btns button { margin-left: 15px; padding: 10px 24px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; background: transparent; color: white; font-weight: 600; transition: 0.3s; }
+        .nav-btns button:hover { background: rgba(255,255,255,0.1); }
+        .btn-active { background: var(--accent) !important; border-color: var(--accent) !important; }
+
+        /* App Layout */
+        .page { flex-grow: 1; display: none; position: relative; overflow: hidden; }
         .active-page { display: flex; }
+
+        /* Map UI */
         #map { flex-grow: 1; height: 100%; }
-        #sidebar { width: 350px; background: white; border-left: 1px solid #ddd; padding: 20px; overflow-y: auto; }
-        #page-dossier { overflow-y: auto; padding: 40px; flex-direction: column; align-items: center; background: #f9f9f9; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; width: 100%; max-width: 1200px; }
-        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .card img { width: 100%; height: 200px; object-fit: cover; }
-        .tag { font-size: 0.7em; font-weight: bold; padding: 4px 8px; border-radius: 4px; background: #eee; margin-right: 5px; }
-        .fav-btn { width: 100%; padding: 10px; background: var(--accent); color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
-        #analysis-box { position: absolute; bottom: 30px; left: 30px; width: 280px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 1000; }
+        #sidebar { width: 360px; background: white; border-left: 1px solid #e0e0e0; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; }
+        
+        /* The Dossier (Pinterest View) */
+        #page-dossier { overflow-y: auto; padding: 60px 40px; flex-direction: column; align-items: center; background: #eeeff1; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 35px; width: 100%; max-width: 1400px; }
+        .card { background: var(--card-bg); border-radius: 16px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,0.08); border: 1px solid #ddd; transition: 0.3s ease; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+        .card img { width: 100%; height: 240px; object-fit: cover; background: #ddd; }
+        .card-content { padding: 25px; }
+
+        /* Typography & Components */
+        .tag { font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 6px; background: #f0f0f0; color: #666; text-transform: uppercase; margin-bottom: 12px; display: inline-block; }
+        .pin-btn { width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 15px; }
+        #analysis-box { position: absolute; bottom: 40px; left: 40px; width: 300px; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 15px 45px rgba(0,0,0,0.15); z-index: 1000; border: 1px solid #eee; }
     </style>
 </head>
 <body>
+
 <nav>
-    <div class="logo">SiteVault 2026</div>
+    <div class="logo">SiteVault <span style="color:var(--accent)">2026</span></div>
     <div class="nav-btns">
-        <button id="btn-map" class="btn-active" onclick="showPage('map')">Map</button>
-        <button id="btn-dossier" onclick="showPage('dossier')">Dossier (<span id="count">0</span>)</button>
+        <button id="btn-map" class="btn-active" onclick="showPage('map')">1. Analysis Map</button>
+        <button id="btn-dossier" onclick="showPage('dossier')">2. Research Dossier (<span id="count">0</span>)</button>
     </div>
 </nav>
+
 <div id="page-map" class="page active-page">
     <div id="map"></div>
     <div id="analysis-box">
-        <h4 style="margin:0; color:var(--accent); font-size: 0.8em;">ANALYSIS</h4>
-        <p style="font-size:0.85em; line-height:1.4;">2026 Ecclesiastical Audit: Identifying <b>Modernist Hulls</b> for adaptive reuse.</p>
+        <h4 style="margin:0 0 10px 0; color:var(--accent); text-transform:uppercase; font-size:0.75em; letter-spacing:1px;">Project Thesis</h4>
+        <p style="font-size:0.85em; line-height:1.6; margin:0; color:#444;">Synthesizing 100 ecclesiastical sites to determine the spatial viability of <b>Modernist Hulls</b> within the 2026 Irish context.</p>
     </div>
-    <div id="sidebar"><h3>Queue</h3><div id="queue-list"></div></div>
+    <div id="sidebar">
+        <h2 style="margin:0 0 10px 0; font-size:1.4em;">Precedent Queue</h2>
+        <p style="font-size:0.9em; color:#888; margin-bottom:20px;">Buildings selected for deep analysis appear below.</p>
+        <div id="queue-list"></div>
+    </div>
 </div>
-<div id="page-dossier" class="page"><div id="dossier-grid" class="grid"></div></div>
+
+<div id="page-dossier" class="page">
+    <div style="width:100%; max-width:1400px; margin-bottom:40px;">
+        <h1 style="font-size:2.8em; margin:0; letter-spacing:-1px;">Site Analysis Dossier</h1>
+        <p style="color:#666; font-size:1.1em;">Curated precedents for architectural intervention.</p>
+    </div>
+    <div id="dossier-grid" class="grid"></div>
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    var map = L.map('map').setView([53.4, -7.9], 7);
+    var map = L.map('map', {zoomControl: false}).setView([53.4, -7.9], 7);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
     var favorites = [];
+    
+    // THE MASTER DATABASE (Expand this to 100)
     var churchData = [
-        {id:1, name:"St. Kevin's", coords:[53.334,-6.265], bucket:"Latin Mass", style:"Victorian", sign:"Traditionalist anchor."},
-        {id:16, name:"St. Brigid's Drumcong", coords:[54.026,-7.962], bucket:"Modernist Disused", style:"Modernist", sign:"Radial structural study."},
-        {id:36, name:"St. Aengus Burt", coords:[55.034,-7.434], bucket:"Modernist In-Use", style:"Circular", sign:"McCormick icon."},
-        {id:56, name:"Medieval Mile", coords:[52.652,-7.252], bucket:"Reused", style:"Gothic", sign:"Materiality study."}
+        {id:1, name:"St. Kevin's Harrington St", coords:[53.334,-6.265], bucket:"Latin Mass", sign:"Study for traditionalist interior preservation and urban integration."},
+        {id:16, name:"St. Brigid's Drumcong", coords:[54.026,-7.962], bucket:"Modernist Disused", sign:"Unique star-plan radial geometry. High potential for volumetric reuse."},
+        {id:36, name:"St. Aengus Burt", coords:[55.034,-7.434], bucket:"Modernist In-Use", sign:"Iconic circular form by Liam McCormick. Landscape fusion precedent."},
+        {id:56, name:"Medieval Mile Museum", coords:[52.652,-7.252], bucket:"Adaptive Reuse", sign:"Precedent for lead cladding and historic masonry contrast."},
+        {id:70, name:"Corpus Christi Knockanure", coords:[52.483,-9.383], bucket:"Modernist Disused", sign:"Miesian minimalist brickwork. Structural clarity study."}
     ];
+
     churchData.forEach(function(s) {
-        L.circleMarker(s.coords, {radius:9, fillColor:'#3498db', color:'#fff', weight:2, fillOpacity:1}).addTo(map)
-        .bindPopup(`<b>${s.name}</b><br><button class="fav-btn" onclick="addFav(${s.id})">Pin to Vault</button>`);
+        var marker = L.circleMarker(s.coords, {
+            radius: 10, fillColor: '#3498db', color: '#fff', weight: 2, fillOpacity: 1
+        }).addTo(map);
+
+        marker.bindPopup(`
+            <div style="width:220px; padding:5px;">
+                <img src="https://maps.googleapis.com/maps/api/staticmap?center=${s.coords[0]},${s.coords[1]}&zoom=18&size=400x250&maptype=satellite" style="width:100%; border-radius:10px; margin-bottom:10px; background:#eee;" onerror="this.src='https://via.placeholder.com/400x250?text=Site+Satellite+View'">
+                <b style="font-size:1.1em; display:block;">${s.name}</b>
+                <span style="font-size:0.8em; color:#888;">${s.bucket}</span>
+                <p style="font-size:0.85em; line-height:1.4; color:#444; margin:8px 0;">${s.sign}</p>
+                <button class="pin-btn" onclick="addFav(${s.id})">Pin to SiteVault</button>
+            </div>
+        `);
     });
+
     function showPage(p) {
-        document.querySelectorAll('.page').forEach(pg => pg.style.display = 'none');
-        document.getElementById('page-'+p).style.display = 'flex';
+        document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active-page'));
+        document.getElementById('page-'+p).classList.add('active-page');
         document.querySelectorAll('.nav-btns button').forEach(b => b.classList.remove('btn-active'));
         document.getElementById('btn-'+p).classList.add('btn-active');
         if(p === 'dossier') renderDossier();
     }
+
     function addFav(id) {
         var s = churchData.find(x => x.id === id);
-        if(!favorites.includes(s)) { favorites.push(s); document.getElementById('count').innerText = favorites.length; renderQueue(); }
+        if(!favorites.find(f => f.id === id)) {
+            favorites.push(s);
+            document.getElementById('count').innerText = favorites.length;
+            renderQueue();
+        }
     }
+
     function renderQueue() {
-        document.getElementById('queue-list').innerHTML = favorites.map(s => `<p><b>${s.name}</b></p>`).join('');
+        var q = document.getElementById('queue-list');
+        q.innerHTML = favorites.map(s => `
+            <div style="padding:15px; background:#f8f9fa; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--accent);">
+                <b style="font-size:0.9em; display:block;">${s.name}</b>
+                <small style="color:#888;">${s.bucket}</small>
+            </div>
+        `).join('');
     }
+
     function renderDossier() {
-        document.getElementById('dossier-grid').innerHTML = favorites.map(s => `
+        var grid = document.getElementById('dossier-grid');
+        if(favorites.length === 0) {
+            grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#aaa; margin-top:50px;">Your research dossier is empty. Pin sites from the Map.</p>';
+            return;
+        }
+        grid.innerHTML = favorites.map(s => `
             <div class="card">
                 <img src="https://maps.googleapis.com/maps/api/staticmap?center=${s.coords[0]},${s.coords[1]}&zoom=18&size=600x400&maptype=satellite">
-                <div style="padding:20px;"><h3>${s.name}</h3><p>${s.sign}</p></div>
-            </div>`).join('');
+                <div class="card-content">
+                    <span class="tag">${s.bucket}</span>
+                    <h3 style="margin:0 0 10px 0; font-size:1.5em;">${s.name}</h3>
+                    <p style="color:#555; line-height:1.6; font-size:0.95em;"><b>Architectural Significance:</b> ${s.sign}</p>
+                </div>
+            </div>
+        `).join('');
     }
 </script>
 </body>
