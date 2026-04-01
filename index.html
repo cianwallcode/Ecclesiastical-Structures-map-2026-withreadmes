@@ -85,7 +85,7 @@
         "Parish": "#7f8c8d",       // Grey
         "Historic": "#795548"      // Brown
     };
-    
+
     // THE MASTER DATABASE (Expand this)
     var churchData = [
     // --- CATEGORY: CISTERCIAN (MONASTIC ROOTS) ---
@@ -254,22 +254,38 @@
         `).join('');
     }
 
-    function renderDossier() {
+function renderDossier() {
         var grid = document.getElementById('dossier-grid');
+        grid.innerHTML = ''; // Clear current view
+
         if(favorites.length === 0) {
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#aaa; margin-top:50px;">Your research dossier is empty. Pin sites from the Map.</p>';
+            grid.innerHTML = '<p>No research collected yet.</p>';
             return;
         }
-        grid.innerHTML = favorites.map(s => `
-            <div class="card">
-                <img src="https://maps.googleapis.com/maps/api/staticmap?center=${s.coords[0]},${s.coords[1]}&zoom=18&size=600x400&maptype=satellite">
-                <div class="card-content">
-                    <span class="tag">${s.bucket}</span>
-                    <h3 style="margin:0 0 10px 0; font-size:1.5em;">${s.name}</h3>
-                    <p style="color:#555; line-height:1.6; font-size:0.95em;"><b>Architectural Significance:</b> ${s.sign}</p>
-                </div>
-            </div>
-        `).join('');
+
+        // Grouping Logic (The "Folders")
+        var buckets = [...new Set(favorites.map(s => s.bucket))];
+
+        buckets.forEach(bucketName => {
+            // Create Folder Header
+            var folderSection = document.createElement('div');
+            folderSection.style.gridColumn = "1 / -1";
+            folderSection.innerHTML = `<h2 style="border-bottom:2px solid ${colors[bucketName]}; padding-bottom:10px; margin-top:40px;">${bucketName} Folder</h2>`;
+            grid.appendChild(folderSection);
+
+            // Add Cards for this Folder
+            favorites.filter(s => s.bucket === bucketName).forEach(s => {
+                var card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="https://maps.googleapis.com/maps/api/staticmap?center=${s.coords[0]},${s.coords[1]}&zoom=18&size=600x400&maptype=satellite&key=YOUR_KEY">
+                    <div class="card-content">
+                        <h3>${s.name}</h3>
+                        <p>${s.sign}</p>
+                    </div>`;
+                grid.appendChild(card);
+            });
+        });
     }
 </script>
 </body>
