@@ -77,12 +77,139 @@
     
     // THE MASTER DATABASE (Expand this to 100)
     var churchData = [
-        {id:1, name:"St. Kevin's Harrington St", coords:[53.334,-6.265], bucket:"Latin Mass", sign:"Study for traditionalist interior preservation and urban integration."},
-        {id:16, name:"St. Brigid's Drumcong", coords:[54.026,-7.962], bucket:"Modernist Disused", sign:"Unique star-plan radial geometry. High potential for volumetric reuse."},
-        {id:36, name:"St. Aengus Burt", coords:[55.034,-7.434], bucket:"Modernist In-Use", sign:"Iconic circular form by Liam McCormick. Landscape fusion precedent."},
-        {id:56, name:"Medieval Mile Museum", coords:[52.652,-7.252], bucket:"Adaptive Reuse", sign:"Precedent for lead cladding and historic masonry contrast."},
-        {id:70, name:"Corpus Christi Knockanure", coords:[52.483,-9.383], bucket:"Modernist Disused", sign:"Miesian minimalist brickwork. Structural clarity study."}
-    ];
+       const churchData = [
+    // --- CATEGORY: CISTERCIAN (MONASTIC ROOTS) ---
+    { id: 1, name: "Mellifont Abbey", coords: [53.7424, -6.4651], bucket: "Cistercian", sign: "The 1142 'Mother House' of Irish Cistercians. Study for Octagon lavabo geometry." },
+    { id: 2, name: "Boyle Abbey", coords: [53.9721, -8.3004], bucket: "Cistercian", sign: "Exceptional transition from Romanesque to Gothic. High structural integrity in nave." },
+    { id: 3, name: "Jerpoint Abbey", coords: [52.5108, -7.1581], bucket: "Cistercian", sign: "Renowned for its 15th-century cloister sculptures and plan clarity." },
+    { id: 4, name: "Tintern Abbey (Parva)", coords: [52.2372, -6.8378], bucket: "Cistercian", sign: "Partial reuse as a residence in the 16th century; a historical 'adaptive reuse' case." },
+    { id: 5, name: "Duiske Abbey", coords: [52.5402, -6.9546], bucket: "Cistercian", sign: "One of the few medieval Cistercian naves still in active liturgical use today." },
+    { id: 6, name: "Holy Cross Abbey", coords: [52.6394, -7.8681], bucket: "Cistercian", sign: "Major 15th-century reconstruction. Exemplary rib vaulting and shrine architecture." },
+    { id: 7, name: "Baltinglass Abbey", coords: [52.9431, -6.7112], bucket: "Cistercian", sign: "Strategically located valley site; study for early Cistercian masonry." },
+    { id: 8, name: "Bective Abbey", coords: [53.5828, -6.7028], bucket: "Cistercian", sign: "Fortified monastic appearance; study for internal defensive courtyard volumes." },
+    { id: 9, name: "Grey Abbey", coords: [54.5358, -5.5562], bucket: "Cistercian", sign: "Anglo-Norman influence on Cistercian plan. Early English Gothic windows." },
+    { id: 10, name: "Dunbrody Abbey", coords: [52.2842, -6.9584], bucket: "Cistercian", sign: "Massive cruciform shell; one of the largest Cistercian ruins in Ireland." },
+    { id: 11, name: "Corcomroe Abbey", coords: [53.1258, -9.0583], bucket: "Cistercian", sign: "The 'Fertile Rock'. Study for limestone carving and Burren integration." },
+    { id: 12, name: "Abbeyknockmoy", coords: [53.4411, -8.7562], bucket: "Cistercian", sign: "Rare surviving medieval wall paintings (The Three Dead Kings)." },
+    { id: 13, name: "Hore Abbey", coords: [52.5126, -7.9221], bucket: "Cistercian", sign: "Last Cistercian foundation; overlooks Rock of Cashel. Proximity analysis." },
+    { id: 14, name: "Mount Melleray Abbey", coords: [52.2742, -7.8611], bucket: "Cistercian", sign: "Trappist revival site. Modern monastic complex with large-scale industrial farming hulls." },
+    { id: 15, name: "Mount St. Joseph Roscrea", coords: [52.9582, -7.8521], bucket: "Cistercian", sign: "Active Benedictine-style Cistercian life. High-Victorian monastic architecture." },
+
+    // --- CATEGORY: BENEDICTINE (TRADITIONAL) ---
+    { id: 16, name: "Glenstal Abbey", coords: [52.6568, -8.4384], bucket: "Benedictine", sign: "Norman-revival castle converted to monastery. Study for residential/educational reuse." },
+    { id: 17, name: "Kylemore Abbey", coords: [53.5617, -9.8894], bucket: "Benedictine", sign: "Iconic neo-Gothic estate. Benedictine adaptation of a private domestic palace." },
+    { id: 18, name: "Fore Abbey", coords: [53.6821, -7.2284], bucket: "Benedictine", sign: "Benedictine priory with fortified towers. Study for structural 'Seven Wonders' site." },
+    { id: 19, name: "Silverstream Priory", coords: [53.6342, -6.3841], bucket: "Benedictine", sign: "Benedictine Monks of Perpetual Adoration. Traditional liturgical hub." },
+    { id: 20, name: "St. Mary's Glencairn", coords: [52.1482, -7.9541], bucket: "Benedictine", sign: "Cistercian-Benedictine tradition for women. Agri-monastic production site." },
+
+    // --- CATEGORY: MODERNIST (THE CRISIS SITES) ---
+    { id: 21, name: "St. Brigid's Drumcong", coords: [54.0261, -7.9622], bucket: "Modernist", sign: "Liam McCormick's star-plan. Primary candidate for volumetric intervention." },
+    { id: 22, name: "Donnybrook Sacred Heart", coords: [53.3241, -6.2341], bucket: "Modernist", sign: "Sculptural brickwork; study for dramatic vertical light distribution." },
+    { id: 23, name: "Annunciation Finglas", coords: [53.3892, -6.3031], bucket: "Modernist", sign: "Massive Post-War shell. High-capacity civic reuse candidate." },
+    { id: 24, name: "Creeslough St. Michael's", coords: [55.1201, -7.9054], bucket: "Modernist", sign: "Roof mimics Derryveagh mountains. Masterclass in sculptural context." },
+    { id: 25, name: "Burt St. Aengus", coords: [55.0344, -7.4342], bucket: "Modernist", sign: "Circular plan inspired by Grianan of Aileach. National design icon." },
+    
+    { id: 100, name: "Christ King Cork", coords: [51.8864, -8.4631], bucket: "Modernist", sign: "Barry Byrne's Art Deco masterpiece. Early adoption of monolithic concrete." }
+
+    // --- CATEGORY: MODERNIST (THE 1950-1980 "CRISIS" HULLS) ---
+    { id: 21, name: "St. Brigid's Drumcong", coords: [54.0261, -7.9622], bucket: "Modernist", sign: "Liam McCormick star-plan. Primary candidate for volumetric intervention." },
+    { id: 22, name: "Donnybrook Sacred Heart", coords: [53.3241, -6.2341], bucket: "Modernist", sign: "Imposing brick modernist shell; study for sculptural vertical light." },
+    { id: 23, name: "Annunciation Finglas", coords: [53.3892, -6.3031], bucket: "Modernist", sign: "Massive post-war volume. High-capacity civic reuse candidate." },
+    { id: 24, name: "Creeslough St. Michael's", coords: [55.1201, -7.9054], bucket: "Modernist", sign: "Fan-plan with mountain-peak roofline. Site-responsive icon." },
+    { id: 25, name: "St. Aengus Burt", coords: [55.0344, -7.4342], bucket: "Modernist", sign: "Circular 'Grianan' inspired plan. National design masterpiece." },
+    { id: 26, name: "Church of the Redeemer Dundalk", coords: [54.0021, -6.3842], bucket: "Modernist", sign: "Concrete 'tent' structure; study for hyperbolic paraboloid roofs." },
+    { id: 27, name: "St. Conal's Glenties", coords: [54.7961, -8.2862], bucket: "Modernist", sign: "Flat-roofed geometric glass and steel study by McCormick." },
+    { id: 28, name: "Our Lady of Victories Ballymun", coords: [53.3894, -6.2651], bucket: "Modernist", sign: "Brutalist era anchor; massive interior clear-span for reuse." },
+    { id: 29, name: "St. Paul's Ayrfield", coords: [53.3951, -6.1852], bucket: "Modernist", sign: "Timber-lined radial ceiling; exceptional acoustic/thermal study." },
+    { id: 30, name: "St. John the Evangelist Ballinteer", coords: [53.2781, -6.2542], bucket: "Modernist", sign: "Angular brick-and-slate geometry; suburban landmark." },
+
+    // --- CATEGORY: BENEDICTINE & CISTERCIAN (MONASTIC ANCHORS) ---
+    { id: 31, name: "Glenstal Abbey", coords: [52.6568, -8.4384], bucket: "Benedictine", sign: "Norman-revival castle converted to monastery; education/living hybrid." },
+    { id: 32, name: "Kylemore Abbey", coords: [53.5617, -9.8894], bucket: "Benedictine", sign: "Neo-Gothic estate; Benedictine adaptation of a domestic palace." },
+    { id: 33, name: "Silverstream Priory", coords: [53.6342, -6.3841], bucket: "Benedictine", sign: "Traditionalist Benedictine hub; study for liturgical preservation." },
+    { id: 34, name: "Mount Melleray Abbey", coords: [52.2742, -7.8611], bucket: "Cistercian", sign: "Trappist revival; industrial-scale monastic agricultural complex." },
+    { id: 35, name: "Mellifont Abbey (Old)", coords: [53.7424, -6.4651], bucket: "Cistercian", sign: "The 1142 mother house; origin of the Irish Cistercian plan." },
+    { id: 36, name: "Jerpoint Abbey", coords: [52.5108, -7.1581], bucket: "Cistercian", sign: "Renowned cloister geometry; 15th-century sculptural precedent." },
+    { id: 37, name: "Holy Cross Abbey", coords: [52.6394, -7.8681], bucket: "Cistercian", sign: "Rib-vaulted masterclass; study for medieval structural restoration." },
+    { id: 38, name: "Boyle Abbey", coords: [53.9721, -8.3004], bucket: "Cistercian", sign: "Transition from Romanesque to Gothic; massive nave arcade." },
+    { id: 39, name: "Duiske Abbey Graiguenamanagh", coords: [52.5402, -6.9546], bucket: "Cistercian", sign: "Medieval nave in active use; case study for survival through utility." },
+    { id: 40, name: "Bolton Abbey Moone", coords: [52.9351, -6.8242], bucket: "Cistercian", sign: "Rural Cistercian satellite; study for monastic agricultural integration." },
+
+    // --- CATEGORY: ADAPTIVE REUSE & LATIN MASS ---
+    { id: 41, name: "St. Kevin's Harrington St", coords: [53.3344, -6.2654], bucket: "Latin Mass", sign: "Victorian Gothic traditionalist node; liturgical preservation." },
+    { id: 42, name: "Medieval Mile Museum", coords: [52.6522, -7.2521], bucket: "Reuse", sign: "Gold-standard for lead/stone contrast in ecclesiastical reuse." },
+    { id: 43, name: "Triskel Arts Cork", coords: [51.8972, -8.4781], bucket: "Reuse", sign: "Christchurch Cork conversion; arts/cinema within a sacred shell." },
+    { id: 44, name: "Smock Alley Theatre", coords: [53.3444, -6.2682], bucket: "Reuse", sign: "Conversion of SS Michael & Johns; performance space adaptation." },
+    { id: 45, name: "Nano Nagle Place", coords: [51.8942, -8.4721], bucket: "Reuse", sign: "Monastic campus repurposed for urban social and garden use." }
+
+    // --- CATEGORY: OLD LATIN MASS & TRADITIONAL ANCHORS ---
+    { id: 46, name: "St. Peter’s Phibsborough", coords: [53.3601, -6.2721], bucket: "Latin Mass", sign: "Gothic Revival masterpiece; study for interior verticality and light." },
+    { id: 47, name: "St. John the Baptist Blackrock", coords: [53.3012, -6.1782], bucket: "Latin Mass", sign: "Pugin-influenced design; traditional liturgical orientation." },
+    { id: 48, name: "St. Mary’s Pope’s Quay", coords: [51.9014, -8.4741], bucket: "Latin Mass", sign: "Dominican Priory Cork; Classical facade with high-vaulted interior." },
+    { id: 49, name: "St. Mary’s Mulhuddart", coords: [53.4072, -6.3761], bucket: "Latin Mass", sign: "Suburban traditionalist node; study for historic masonry in growth areas." },
+    { id: 50, name: "Mount St. Alphonsus Limerick", coords: [52.6582, -8.6291], bucket: "Traditional", sign: "Redemptorist anchor; exceptional mosaic and marble craftsmanship." },
+
+    // --- CATEGORY: LOCAL PARISH CHURCHES (TRADITIONAL) ---
+    { id: 51, name: "St. Mary’s Athlone", coords: [53.4241, -7.9401], bucket: "Parish", sign: "Town-center anchor; study for civic presence and limestone detailing." },
+    { id: 52, name: "St. Conleth’s Newbridge", coords: [53.1812, -6.7941], bucket: "Parish", sign: "Large-scale Victorian parish model; high-occupancy capacity study." },
+    { id: 53, name: "St. Nicholas Dundalk", coords: [54.0042, -6.4021], bucket: "Parish", sign: "Early 19th-century 'Emancipation' church; study for transition styles." },
+    { id: 54, name: "St. Muredach’s Cathedral Ballina", coords: [54.1141, -9.1451], bucket: "Parish", sign: "Regional landmark; exceptional Gothic spire and riverside siting." },
+    { id: 55, name: "St. Mary’s Castleblayney", coords: [54.1182, -6.7341], bucket: "Parish", sign: "Stone-carved vernacular; study for local materiality in religious architecture." },
+    { id: 56, name: "St. Peter & Paul Clonmel", coords: [52.3541, -7.7012], bucket: "Parish", sign: "Grand Italianate interior; contrast study for Modernist minimalism." },
+    { id: 57, name: "Church of the Assumption Tullamore", coords: [53.2742, -7.4921], bucket: "Parish", sign: "Post-fire reconstruction; modern-traditional hybrid timber ceiling." },
+    { id: 58, name: "St. Brendan’s Birr", coords: [53.0941, -7.9121], bucket: "Parish", sign: "Finely detailed Gothic Revival; study for ornamental stone preservation." },
+    { id: 59, name: "St. Mary’s Navan", coords: [53.6521, -6.6842], bucket: "Parish", sign: "Classical influence; study for wide-nave sightlines and acoustic volume." },
+    { id: 60, name: "St. Eugene’s Cathedral Derry", coords: [54.9981, -7.3291], bucket: "Parish", sign: "Major Gothic node; study for scale and urban topographical dominance." }
+
+    // --- CATEGORY: MODERNIST PARISH (1970s EXPERIMENTS) ---
+    { id: 61, name: "St. Patrick's Esker Dodder", coords: [53.3482, -6.3941], bucket: "Modernist", sign: "Dramatic sweeping roofline; study for low-maintenance modern materials." },
+    { id: 62, name: "Holy Family Kill O' The Grange", coords: [53.2751, -6.1582], bucket: "Modernist", sign: "Hexagonal floor plan; study for communal liturgical seating." },
+    { id: 63, name: "St. Mochta's Porterstown", coords: [53.3781, -6.4021], bucket: "Modernist", sign: "Integration of modern timber and brick; suburban growth model." },
+    { id: 64, name: "Church of the Incarnation Fettercairn", coords: [53.2891, -6.3984], bucket: "Modernist", sign: "Minimalist concrete box; study for brutalist thermal efficiency." },
+    { id: 65, name: "St. Killian's Tallaght", coords: [53.2922, -6.3651], bucket: "Modernist", sign: "Late-modernist brickwork; study for interior community-center hybrid." },
+    { id: 66, name: "Our Lady of the Wayside Bluebell", coords: [53.3321, -6.3421], bucket: "Modernist", sign: "Distinctive copper-clad roof; study for metallic weathering in urban sites." },
+    { id: 67, name: "St. Kevin's Kilnamanagh", coords: [53.3014, -6.3582], bucket: "Modernist", sign: "Low-profile geometric form; study for suburban scale and visibility." },
+    { id: 68, name: "St. Jude's Templeogue", coords: [53.3051, -6.3251], bucket: "Modernist", sign: "Large-span concrete roof; candidate for internal volumetric partitioning." },
+    { id: 69, name: "Church of the Ascension Balally", coords: [53.2784, -6.2341], bucket: "Modernist", sign: "Distinctive light-scoop windows; study for indirect natural lighting." },
+    { id: 70, name: "St. Attracta's Meadowbrook", coords: [53.2842, -6.2481], bucket: "Modernist", sign: "Split-level modernist site; study for topographical integration." },
+
+    // --- CATEGORY: MONASTIC EXTENSIONS (BENEDICTINE/CISTERCIAN) ---
+    { id: 71, name: "St. Benedict’s Priory Cobh", coords: [51.8512, -8.2981], bucket: "Benedictine", sign: "Benedictine nuns; study for adaptive reuse of a maritime convent." },
+    { id: 72, name: "Bolton Abbey Moone", coords: [52.9351, -6.8242], bucket: "Cistercian", sign: "Active farm-monastery hybrid; study for rural economic sustainability." },
+    { id: 73, name: "Roscrea Cistercian College", coords: [52.9582, -7.8521], bucket: "Cistercian", sign: "Monastic educational hub; reuse of dormitories and lecture halls." },
+    { id: 74, name: "St. Saviour’s Priory Waterford", coords: [52.2612, -7.1141], bucket: "Benedictine", sign: "Urban monastic cell; study for 'micro-monastery' footprints." },
+    { id: 75, name: "St. Thomas's Abbey Dublin", coords: [53.3421, -6.2782], bucket: "Benedictine", sign: "Historic site analysis; urban footprint of lost medieval Benedictine life." },
+
+    // --- CATEGORY: HISTORIC RUINS (REUSE INSPIRATION) ---
+    { id: 76, name: "Quinn Abbey Clare", coords: [52.8184, -8.8981], bucket: "Historic", sign: "Franciscan friary on Norman castle foundations; double-reuse precedent." },
+    { id: 77, name: "Askeaton Abbey", coords: [52.5982, -8.9741], bucket: "Historic", sign: "River-side siting; study for cloister circulation and garden reuse." },
+    { id: 78, name: "Ennis Friary", coords: [52.8441, -8.9821], bucket: "Historic", sign: "Exceptional 15th-century stone carvings; precedent for conservation." },
+    { id: 79, name: "Muckross Abbey Killarney", coords: [52.0282, -9.4951], bucket: "Historic", sign: "World-famous cloister yew tree; integration of living landscape and stone." },
+    { id: 80, name: "Ross Errilly Friary", coords: [53.4782, -9.1341], bucket: "Historic", sign: "Extremely well-preserved domestic monastic quarters; residential study." },
+    { id: 81, name: "Sligo Abbey", coords: [54.2712, -8.4721], bucket: "Historic", sign: "Dominican Friary; study for urban ruins in modern town planning." },
+    { id: 82, name: "Athenry Priory", coords: [53.2982, -8.7441], bucket: "Historic", sign: "Medieval collegiate church; study for large-scale roofless volumes." },
+    { id: 83, name: "Kilcrea Friary", coords: [51.8651, -8.7121], bucket: "Historic", sign: "Siting within a marshland; study for water management and stone rot." },
+    { id: 84, name: "Buttevant Abbey", coords: [52.2312, -8.6711], bucket: "Historic", sign: "Exceptional crypt geometry; study for subterranean intervention." },
+    { id: 85, name: "Timoleague Friary", coords: [51.6421, -8.7641], bucket: "Historic", sign: "Water-edge defensive architecture; study for maritime durability." },
+
+    // --- CATEGORY: LOCAL TRADITIONAL PARISHES ---
+    { id: 86, name: "St. Mel’s Cathedral Longford", coords: [53.7251, -7.7981], bucket: "Parish", sign: "Major fire restoration; study for rebuilding historic volumes with modern tech." },
+    { id: 87, name: "St. Aidan’s Cathedral Enniscorthy", coords: [52.5012, -6.5681], bucket: "Parish", sign: "Pugin Gothic; vertical spire study and town-center dominance." },
+    { id: 88, name: "St. Mary’s Killarney", coords: [52.0591, -9.5102], bucket: "Parish", sign: "Pugin-designed Cathedral; interior proportion and light-well study." },
+    { id: 89, name: "St. Colman’s Cathedral Cobh", coords: [51.8514, -8.2931], bucket: "Parish", sign: "French Gothic influence; study for dramatic verticality on slopes." },
+    { id: 90, name: "St. Fin Barre's Cork", coords: [51.8944, -8.4801], bucket: "Parish", sign: "William Burges masterpiece; study for high-Victorian 'Total Design'." },
+    { id: 91, name: "St. Carthage's Lismore", coords: [52.1382, -7.9321], bucket: "Parish", sign: "Eclectic spire and masonry; study for multi-era architectural layering." },
+    { id: 92, name: "Holy Trinity Waterford", coords: [52.2601, -7.1102], bucket: "Parish", sign: "John Roberts classical design; interior acoustic-vaulting study." },
+    { id: 93, name: "St. Nicholas Galway", coords: [53.2721, -9.0541], bucket: "Parish", sign: "Medieval city church; study for layout shifts over 700 years." },
+    { id: 94, name: "Christ Church Cathedral Dublin", coords: [53.3431, -6.2711], bucket: "Parish", sign: "Romanesque-Gothic hybrid; study for historic crypt utility." },
+    { id: 95, name: "St. Patrick's Cathedral Dublin", coords: [53.3392, -6.2712], bucket: "Parish", sign: "National scale; study for large-scale tourism within active sacred space." },
+    { id: 96, name: "St. Canice's Kilkenny", coords: [52.6561, -7.2581], bucket: "Parish", sign: "Early English Gothic; study for light-and-shadow on limestone." },
+    { id: 97, name: "St. Laserian's Old Leighlin", coords: [52.7351, -7.0251], bucket: "Parish", sign: "Ancient small-scale cathedral; study for intimate sacred volumes." },
+    { id: 98, name: "Church of the Assumption Wexford", coords: [52.3382, -6.4621], bucket: "Parish", sign: "Twin Churches Wexford; study for symmetrical urban planning." },
+    { id: 99, name: "St. Ibar's Wexford", coords: [52.3411, -6.4651], bucket: "Parish", sign: "Companion to Assumption; study for identical Gothic Revival shells." },
+    { id: 100, name: "St. Anne’s Shandon", coords: [51.9031, -8.4751], bucket: "Parish", sign: "The 'Four Faced Liar'; study for iconic campanile and sound integration." }
+];
+];
 
     churchData.forEach(function(s) {
         var marker = L.circleMarker(s.coords, {
