@@ -1,1 +1,1 @@
-# Ecclesiastical-Structures-map-2026-withreadmes
+# Ecclesiastical-Structures-map-2026
