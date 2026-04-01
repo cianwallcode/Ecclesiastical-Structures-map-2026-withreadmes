@@ -88,7 +88,7 @@
     // 2. Render Map Pins with correct Scale & Color
     churchData.forEach(function(s) {
         var marker = L.circleMarker(s.coords, {
-            radius: 6, // Smaller, professional radius
+            radius: 5, // Smaller, professional radius
             fillColor: colors[s.bucket] || '#3498db', 
             color: '#fff', 
             weight: 1, 
