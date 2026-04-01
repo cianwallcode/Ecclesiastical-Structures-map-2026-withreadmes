@@ -85,27 +85,8 @@
         "Parish": "#7f8c8d",       // Grey
         "Historic": "#795548"      // Brown
     };
-    // 2. Render Map Pins with correct Scale & Color
-    churchData.forEach(function(s) {
-        var marker = L.circleMarker(s.coords, {
-            radius: 5, // Smaller, professional radius
-            fillColor: colors[s.bucket] || '#3498db', 
-            color: '#fff', 
-            weight: 1, 
-            fillOpacity: 0.9
-        }).addTo(map);
 
-        marker.bindPopup(`
-            <div style="width:220px;">
-                <img src="https://maps.googleapis.com/maps/api/staticmap?center=${s.coords[0]},${s.coords[1]}&zoom=18&size=400x250&maptype=satellite&key=YOUR_KEY" style="width:100%; border-radius:8px;">
-                <h4 style="margin:10px 0 5px 0;">${s.name}</h4>
-                <span style="background:${colors[s.bucket]}; color:white; padding:2px 8px; border-radius:4px; font-size:10px;">${s.bucket}</span>
-                <button class="pin-btn" onclick="addFav(${s.id})">Add to Research Folder</button>
-            </div>
-        `);
-    });
-
-    // THE MASTER DATABASE (Expand this)
+    // 2.THE MASTER DATABASE (Expand this)
     var churchData = [
     // --- CATEGORY: CISTERCIAN (MONASTIC ROOTS) ---
     { id: 1, name: "Mellifont Abbey", coords: [53.7424, -6.4651], bucket: "Cistercian", sign: "The 1142 'Mother House' of Irish Cistercians. Study for Octagon lavabo geometry." },
@@ -230,18 +211,22 @@
     { id: 100, name: "St. Anne’s Shandon", coords: [51.9031, -8.4751], bucket: "Parish", sign: "The 'Four Faced Liar'; study for iconic campanile and sound integration." },
 ];
 
+    // 3. Render Map Pins with correct Scale & Color
     churchData.forEach(function(s) {
         var marker = L.circleMarker(s.coords, {
-            radius: 10, fillColor: '#3498db', color: '#fff', weight: 2, fillOpacity: 1
+            radius: 5, // Smaller, professional radius
+            fillColor: colors[s.bucket] || '#3498db', 
+            color: '#fff', 
+            weight: 1, 
+            fillOpacity: 0.9
         }).addTo(map);
 
         marker.bindPopup(`
-            <div style="width:220px; padding:5px;">
-                <img src="https://maps.googleapis.com/maps/api/staticmap?center=${s.coords[0]},${s.coords[1]}&zoom=18&size=400x250&maptype=satellite" style="width:100%; border-radius:10px; margin-bottom:10px; background:#eee;" onerror="this.src='https://via.placeholder.com/400x250?text=Site+Satellite+View'">
-                <b style="font-size:1.1em; display:block;">${s.name}</b>
-                <span style="font-size:0.8em; color:#888;">${s.bucket}</span>
-                <p style="font-size:0.85em; line-height:1.4; color:#444; margin:8px 0;">${s.sign}</p>
-                <button class="pin-btn" onclick="addFav(${s.id})">Pin to SiteVault</button>
+            <div style="width:220px;">
+                <img src="https://maps.googleapis.com/maps/api/staticmap?center=${s.coords[0]},${s.coords[1]}&zoom=18&size=400x250&maptype=satellite&key=YOUR_KEY" style="width:100%; border-radius:8px;">
+                <h4 style="margin:10px 0 5px 0;">${s.name}</h4>
+                <span style="background:${colors[s.bucket]}; color:white; padding:2px 8px; border-radius:4px; font-size:10px;">${s.bucket}</span>
+                <button class="pin-btn" onclick="addFav(${s.id})">Add to Research Folder</button>
             </div>
         `);
     });
