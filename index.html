@@ -22,13 +22,58 @@
         #map { flex-grow: 1; height: 100%; }
         #sidebar { width: 360px; background: white; border-left: 1px solid #e0e0e0; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; }
         
-        /* The Dossier (Pinterest View) */
-        #page-dossier { overflow-y: auto; padding: 60px 40px; flex-direction: column; align-items: center; background: #eeeff1; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 35px; width: 100%; max-width: 1400px; }
-        .card { background: var(--card-bg); border-radius: 16px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,0.08); border: 1px solid #ddd; transition: 0.3s ease; }
-        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
-        .card img { width: 100%; height: 240px; object-fit: cover; background: #ddd; }
-        .card-content { padding: 25px; }
+ /* 1. Updated Dossier Layout (Comparative View) */
+        #page-dossier { 
+            display: none; /* Controlled by your JS nav */
+            overflow-x: auto; /* This allows you to scroll sideways between folders */
+            padding: 60px 40px; 
+            background: #f4f5f7; 
+            min-height: 100vh;
+        }
+
+        /* 2. The Horizontal Folder Container */
+        #dossier-grid { 
+            display: flex; 
+            flex-direction: row; 
+            gap: 30px; 
+            align-items: flex-start; 
+            width: 100%;
+        }
+
+        /* 3. The Individual Folder Column */
+        .folder-container { 
+            min-width: 400px; 
+            max-width: 450px;
+            background: white; 
+            padding: 25px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+            flex-shrink: 0; /* Prevents folders from squashing */
+        }
+
+        /* 4. The Card Styling (Kept but refined) */
+        .card { 
+            background: white; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            border: 1px solid #eee; 
+            margin-bottom: 20px; 
+            transition: 0.3s ease; 
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 200px; object-fit: cover; background: #ddd; }
+        .card-content { padding: 20px; }
+
+        /* 5. The Stats Dashboard styling */
+        #dossier-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 1400px;
+        }
 
         /* Typography & Components */
         .tag { font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 6px; background: #f0f0f0; color: #666; text-transform: uppercase; margin-bottom: 12px; display: inline-block; }
