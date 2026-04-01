@@ -292,38 +292,72 @@
     }
 
 function renderDossier() {
-        var grid = document.getElementById('dossier-grid');
-        grid.innerHTML = ''; // Clear current view
+    const grid = document.getElementById('dossier-grid');
+    const statsDiv = document.getElementById('dossier-stats');
+    grid.innerHTML = '';
+    statsDiv.innerHTML = '';
 
-        if(favorites.length === 0) {
-            grid.innerHTML = '<p>No research collected yet.</p>';
-            return;
-        }
-
-        // Grouping Logic (The "Folders")
-        var buckets = [...new Set(favorites.map(s => s.bucket))];
-
-        buckets.forEach(bucketName => {
-            // Create Folder Header
-            var folderSection = document.createElement('div');
-            folderSection.style.gridColumn = "1 / -1";
-            folderSection.innerHTML = `<h2 style="border-bottom:2px solid ${colors[bucketName]}; padding-bottom:10px; margin-top:40px;">${bucketName} Folder</h2>`;
-            grid.appendChild(folderSection);
-
-            // Add Cards for this Folder
-            favorites.filter(s => s.bucket === bucketName).forEach(s => {
-                var card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img src="https://maps.googleapis.com/maps/api/staticmap?center=${s.coords[0]},${s.coords[1]}&zoom=18&size=600x400&maptype=satellite&key=YOUR_KEY">
-                    <div class="card-content">
-                        <h3>${s.name}</h3>
-                        <p>${s.sign}</p>
-                    </div>`;
-                grid.appendChild(card);
-            });
-        });
+    if (favorites.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 50px; color: #999;">No sites selected for analysis. Return to map to add precedents.</p>';
+        return;
     }
+
+    // 1. CALCULATE STATS
+    const total = favorites.length;
+    const modernistCount = favorites.filter(s => s.bucket === 'Modernist').length;
+    const uniqueBuckets = [...new Set(favorites.map(s => s.bucket))].length;
+
+    statsDiv.innerHTML = `
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #2c3e50;">
+            <small style="color: #888; text-transform: uppercase;">Total Precedents</small>
+            <div style="font-size: 24px; font-weight: bold;">${total}</div>
+        </div>
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #e67e22;">
+            <small style="color: #888; text-transform: uppercase;">Modernist Hulls</small>
+            <div style="font-size: 24px; font-weight: bold;">${modernistCount}</div>
+        </div>
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #27ae60;">
+            <small style="color: #888; text-transform: uppercase;">Typology Diversity</small>
+            <div style="font-size: 24px; font-weight: bold;">${uniqueBuckets} Categories</div>
+        </div>
+    `;
+
+    // 2. RENDER FOLDERS (GROUPED BY BUCKET)
+    const buckets = [...new Set(favorites.map(s => s.bucket))];
+
+    buckets.forEach(bucket => {
+        // Create Folder Header
+        const folderHeader = document.createElement('div');
+        folderHeader.style.gridColumn = "1 / -1";
+        folderHeader.innerHTML = `
+            <h2 style="margin-top: 40px; border-bottom: 2px solid ${colors[bucket] || '#ccc'}; padding-bottom: 10px;">
+                ${bucket} Folder <span style="font-size: 0.5em; vertical-align: middle; color: #999; margin-left: 10px;">(${favorites.filter(s => s.bucket === bucket).length} Sites)</span>
+            </h2>`;
+        grid.appendChild(folderHeader);
+
+        // Create Cards for each site in this folder
+        favorites.filter(s => s.bucket === bucket).forEach(s => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div style="position: relative;">
+                    <img src="https://maps.googleapis.com/maps/api/staticmap?center=${s.coords[0]},${s.coords[1]}&zoom=17&size=600x300&maptype=satellite&key=YOUR_KEY" style="width:100%; display:block;">
+                    <div style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; border: 1px solid #ddd;">ID: #SITE-${s.id}</div>
+                </div>
+                <div class="card-content">
+                    <h3 style="margin: 0 0 10px 0;">${s.name}</h3>
+                    <p style="font-size: 0.9em; color: #555; line-height: 1.5;">${s.sign}</p>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 10px; color: #999;">COORDS: ${s.coords[0].toFixed(3)}, ${s.coords[1].toFixed(3)}</span>
+                        <button onclick="removeFav(${s.id})" style="background: none; border: none; color: #c0392b; cursor: pointer; font-size: 12px;">Remove</button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    });
+}
 </script>
 </body>
 </html>
