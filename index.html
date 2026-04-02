@@ -133,34 +133,33 @@ nav {
 </nav>
 
 <div id="page-map" class="page active-page">
-    <div id="map" style="width: 100%; height: calc(100vh - 70px); position: relative; background: #eee;"></div>
-
-<div id="map-legend" style="
-    position: absolute; 
-    top: 20px; 
-    right: 20px; 
-    background: rgba(255, 255, 255, 0.95); 
-    padding: 15px; 
-    border-radius: 8px; 
-    z-index: 1100; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-    font-family: sans-serif;
-    border: 1px solid rgba(0,0,0,0.1);
-    backdrop-filter: blur(10px);
-    width: 160px;
-">
-    <b style="display:block; margin-bottom:12px; font-size: 11px; letter-spacing: 1px; color: #2c3e50; text-transform: uppercase;">Site Typology</b>
     
-    <div style="display: flex; flex-direction: column; gap: 10px; font-size: 11px; color: #444; font-weight: 600;">
-        <div style="display: flex; align-items: center;"><span style="background:#27ae60; width:10px; height:10px; display:inline-block; border-radius:50%; margin-right:10px;"></span> Cistercian</div>
-        <div style="display: flex; align-items: center;"><span style="background:#8e44ad; width:10px; height:10px; display:inline-block; border-radius:50%; margin-right:10px;"></span> Benedictine</div>
-        <div style="display: flex; align-items: center;"><span style="background:#e67e22; width:10px; height:10px; display:inline-block; border-radius:50%; margin-right:10px;"></span> Modernist</div>
-        <div style="display: flex; align-items: center;"><span style="background:#c0392b; width:10px; height:10px; display:inline-block; border-radius:50%; margin-right:10px;"></span> Latin Mass</div>
-        <div style="display: flex; align-items: center;"><span style="background:#2980b9; width:10px; height:10px; display:inline-block; border-radius:50%; margin-right:10px;"></span> Reuse</div>
-        <div style="display: flex; align-items: center;"><span style="background:#7f8c8d; width:10px; height:10px; display:inline-block; border-radius:50%; margin-right:10px;"></span> Parish</div>
-        <div style="display: flex; align-items: center;"><span style="background:#795548; width:10px; height:10px; display:inline-block; border-radius:50%; margin-right:10px;"></span> Historic</div>
-        <div style="display: flex; align-items: center;"><span style="background:#2c3e50; width:10px; height:10px; display:inline-block; border-radius:50%; margin-right:10px;"></span> Traditional</div>
+    <div id="map-controls" style="background: #2c3e50; padding: 10px 20px; display: flex; align-items: center; gap: 20px; border-bottom: 2px solid var(--accent);">
+        <span style="color: white; font-size: 11px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">Active Dataset:</span>
+        <select id="dataset-selector" onchange="switchMapLayer(this.value)" style="background: #34495e; color: white; border: 1px solid #555; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-family: sans-serif;">
+            <option value="churches">Ecclesiastical Structures</option>
+            <option value="museums">Museums of Ireland</option>
+        </select>
     </div>
+
+    <div id="map" style="width: 100%; height: calc(100vh - 120px); position: relative; background: #eee;"></div>
+
+    <div id="map-legend" style="
+        position: absolute; 
+        top: 80px; /* Adjusted down slightly to clear the new controls bar */
+        right: 20px; 
+        background: rgba(255, 255, 255, 0.95); 
+        padding: 15px; 
+        border-radius: 8px; 
+        z-index: 1100; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        font-family: sans-serif;
+        border: 1px solid rgba(0,0,0,0.1);
+        backdrop-filter: blur(10px);
+        width: 160px;
+    ">
+        <b style="display:block; margin-bottom:12px; font-size: 11px; letter-spacing: 1px; color: #2c3e50; text-transform: uppercase;">Site Typology</b>
+        </div>
 </div>
 <div id="thesis-box">
     <h4 style="margin:0 0 12px 0; color:var(--accent); text-transform:uppercase; font-size:10px; letter-spacing:2px; font-weight:800;">
