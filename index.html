@@ -400,10 +400,15 @@ function showPage(p) {
             </div>
         `).join('');
     }
-
 function renderDossier() {
     const grid = document.getElementById('dossier-grid');
     const statsDiv = document.getElementById('dossier-stats');
+    
+    // THE SAFETY GUARD:
+    // If the grid doesn't exist yet, or favorites hasn't been initialized, STOP.
+    if (!grid || !statsDiv) return; 
+    if (!favorites) { favorites = []; } 
+
     grid.innerHTML = '';
     statsDiv.innerHTML = '';
 
