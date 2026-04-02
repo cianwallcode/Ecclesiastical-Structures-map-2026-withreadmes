@@ -388,40 +388,41 @@ function renderDossier() {
         </div>
     `;
 
-    // 2. RENDER FOLDERS (GROUPED BY BUCKET)
-    const buckets = [...new Set(favorites.map(s => s.bucket))];
+buckets.forEach(bucket => {
+        // 1. Create a Column Container (The "Folder")
+        const folder = document.createElement('div');
+        folder.className = 'folder-container'; // This links to your CSS
 
-    buckets.forEach(bucket => {
-        // Create Folder Header
-        const folderHeader = document.createElement('div');
-        folderHeader.style.gridColumn = "1 / -1";
-        folderHeader.innerHTML = `
-            <h2 style="margin-top: 40px; border-bottom: 2px solid ${colors[bucket] || '#ccc'}; padding-bottom: 10px;">
-                ${bucket} Folder <span style="font-size: 0.5em; vertical-align: middle; color: #999; margin-left: 10px;">(${favorites.filter(s => s.bucket === bucket).length} Sites)</span>
-            </h2>`;
-        grid.appendChild(folderHeader);
+        // 2. Add the Folder Title
+        let folderHtml = `
+            <h2 style="margin-top: 0; border-bottom: 3px solid ${colors[bucket] || '#ccc'}; padding-bottom: 10px; font-size: 1.4em;">
+                ${bucket} <span style="font-size: 0.5em; color: #999; margin-left: 10px;">(${favorites.filter(s => s.bucket === bucket).length} Sites)</span>
+            </h2>
+            <div class="folder-contents">`;
 
-        // Create Cards for each site in this folder
+        // 3. Add the Cards for this specific bucket
         favorites.filter(s => s.bucket === bucket).forEach(s => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <div style="position: relative;">
-                    <img src="https://maps.googleapis.com/maps/api/staticmap?center=${s.coords[0]},${s.coords[1]}&zoom=17&size=600x300&maptype=satellite&key=YOUR_KEY" style="width:100%; display:block;">
-                    <div style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; border: 1px solid #ddd;">ID: #SITE-${s.id}</div>
-                </div>
-                <div class="card-content">
-                    <h3 style="margin: 0 0 10px 0;">${s.name}</h3>
-                    <p style="font-size: 0.9em; color: #555; line-height: 1.5;">${s.sign}</p>
-                    <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 10px; color: #999;">COORDS: ${s.coords[0].toFixed(3)}, ${s.coords[1].toFixed(3)}</span>
-                        <button onclick="removeFav(${s.id})" style="background: none; border: none; color: #c0392b; cursor: pointer; font-size: 12px;">Remove</button>
+            folderHtml += `
+                <div class="card">
+                    <div style="position: relative;">
+                        <img src="https://maps.googleapis.com/maps/api/staticmap?center=${s.coords[0]},${s.coords[1]}&zoom=17&size=600x300&maptype=satellite&key=YOUR_KEY" style="width:100%; display:block;">
+                        <div style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; border: 1px solid #ddd;">ID: #SITE-${s.id}</div>
                     </div>
-                </div>
-            `;
-            grid.appendChild(card);
+                    <div class="card-content">
+                        <h3 style="margin: 0 0 10px 0;">${s.name}</h3>
+                        <p style="font-size: 0.9em; color: #555; line-height: 1.5;">${s.sign}</p>
+                        <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 10px; color: #999;">COORDS: ${s.coords[0].toFixed(3)}, ${s.coords[1].toFixed(3)}</span>
+                            <button onclick="removeFav(${s.id})" style="background: none; border: none; color: #c0392b; cursor: pointer; font-size: 12px;">Remove</button>
+                        </div>
+                    </div>
+                </div>`;
         });
+
+        folderHtml += `</div>`; // Close folder-contents
+        folder.innerHTML = folderHtml;
+        grid.appendChild(folder);
     });
 }
 </script>
