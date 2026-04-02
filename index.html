@@ -383,32 +383,41 @@ nav {
     });
 
 function showPage(p) {
-        // 1. Hide every single page first
-        document.querySelectorAll('.page').forEach(pg => {
-            pg.classList.remove('active-page');
-            pg.style.display = 'none'; // Force hide
-        });
+    // 1. Hide every single page first
+    document.querySelectorAll('.page').forEach(pg => {
+        pg.classList.remove('active-page');
+        pg.style.display = 'none'; 
+    });
 
-        // 2. Show the one we want
-        const target = document.getElementById('page-' + p);
-        if (target) {
-            target.classList.add('active-page');
-            target.style.display = 'block'; // Force show
-        }
-
-        // 3. Handle button highlights
-        document.querySelectorAll('.nav-btns button').forEach(b => b.classList.remove('btn-active'));
-        const activeBtn = document.getElementById('btn-' + p);
-        if (activeBtn) activeBtn.classList.add('btn-active');
-
-        // 4. If it's the dossier, build the folders
-        if(p === 'dossier') renderDossier();
-        // 5. CRITICAL: Force map to redraw when switching back
-        if(p === 'map' && map) {
-            setTimeout(() => { map.invalidateSize(); }, 100);
-        }
-
+    // 2. Show the one we want
+    const target = document.getElementById('page-' + p);
+    if (target) {
+        target.classList.add('active-page');
+        target.style.display = 'block'; 
     }
+
+    // 3. Handle button highlights (Brackets Added Here)
+    document.querySelectorAll('.nav-btns button').forEach(b => {
+        b.classList.remove('btn-active');
+    });
+    
+    const activeBtn = document.getElementById('btn-' + p);
+    if (activeBtn) {
+        activeBtn.classList.add('btn-active');
+    }
+
+    // 4. If it's the dossier, build the folders
+    if (p === 'dossier') {
+        renderDossier();
+    }
+
+    // 5. CRITICAL: Force map to redraw when switching back
+    if (p === 'map' && map) {
+        setTimeout(() => { 
+            map.invalidateSize(); 
+        }, 100);
+    }
+}
 
     function addFav(id) {
         var s = churchData.find(x => x.id === id);
