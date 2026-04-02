@@ -362,6 +362,12 @@ nav {
     { id: 100, name: "St. Anne’s Shandon", coords: [51.9031, -8.4751], bucket: "Parish", sign: "The 'Four Faced Liar'; study for iconic campanile and sound integration." },
 ];
 
+function renderPins() {
+    // 1. Safety check: make sure map and data exist
+    if (!map || !churchData) {
+        console.error("Pins failed: Map or ChurchData missing.");
+        return;
+    }
     // 3. Render Map Pins with correct Scale & Color
     churchData.forEach(function(s) {
         var marker = L.circleMarker(s.coords, {
