@@ -403,6 +403,11 @@ function showPage(p) {
 
         // 4. If it's the dossier, build the folders
         if(p === 'dossier') renderDossier();
+        // 5. CRITICAL: Force map to redraw when switching back
+        if(p === 'map' && map) {
+            setTimeout(() => { map.invalidateSize(); }, 100);
+        }
+
     }
 
     function addFav(id) {
