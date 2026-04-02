@@ -178,6 +178,25 @@ nav {
         <div id="queue-list"></div>
     </div>
 </div>
+<div id="site-intake-bar" style="background: white; padding: 20px; border-top: 4px solid var(--accent); display: grid; grid-template-columns: 2fr 1fr 1fr 2fr auto; gap: 10px; align-items: end;">
+    <div>
+        <label style="display:block; font-size:10px; font-weight:bold; color:#888; margin-bottom:5px;">SITE NAME</label>
+        <input type="text" id="map-entry-name" placeholder="Name of structure..." style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;">
+    </div>
+    <div>
+        <label style="display:block; font-size:10px; font-weight:bold; color:#888; margin-bottom:5px;">LATITUDE</label>
+        <input type="text" id="map-entry-lat" placeholder="53.349..." style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;">
+    </div>
+    <div>
+        <label style="display:block; font-size:10px; font-weight:bold; color:#888; margin-bottom:5px;">LONGITUDE</label>
+        <input type="text" id="map-entry-lng" placeholder="-6.260..." style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;">
+    </div>
+    <div>
+        <label style="display:block; font-size:10px; font-weight:bold; color:#888; margin-bottom:5px;">ARCHITECTURAL NOTES</label>
+        <input type="text" id="map-entry-notes" placeholder="Brief observations..." style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;">
+    </div>
+    <button onclick="commitFromMap()" style="background:var(--dark); color:white; border:none; padding:12px 20px; font-weight:bold; border-radius:4px; cursor:pointer; height:40px;">+ COMMIT SITE</button>
+</div>
 
 <div id="page-dossier" class="page">
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 30px; border-bottom: 1px solid #eee; background: white;">
