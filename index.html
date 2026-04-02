@@ -190,16 +190,34 @@ nav {
         </div>
 
 <div id="dossier-grid"></div>
-</div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</div> <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    var map = L.map('map', {zoomControl: false}).setView([53.4, -7.9], 7);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
-
+    // 1. Declare variables globally so all functions can see them
+    var map;
     var favorites = [];
-    
+
+    // 2. The "Safety Wrapper" - wait for the HTML to load
+    document.addEventListener('DOMContentLoaded', function() {
+        const mapContainer = document.getElementById('map');
+        
+        if (mapContainer) {
+            // Initialize the map
+            map = L.map('map', {zoomControl: false}).setView([53.4, -7.9], 7);
+            
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+            }).addTo(map);
+
+            L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+            // Trigger the pin rendering immediately
+            if (typeof renderPins === "function") {
+                renderPins();
+            }
+        } else {
+            console.error("Critical Error: Map ID not found in HTML.");
+        }
+    });
 // 1.1 Define the Color Palette
     var colors = {
         "Cistercian": "#27ae60",
