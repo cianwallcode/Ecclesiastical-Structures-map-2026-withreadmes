@@ -360,18 +360,16 @@ nav {
     { id: 98, name: "Church of the Assumption Wexford", coords: [52.3382, -6.4621], bucket: "Parish", sign: "Twin Churches Wexford; study for symmetrical urban planning." },
     { id: 99, name: "St. Ibar's Wexford", coords: [52.3411, -6.4651], bucket: "Parish", sign: "Companion to Assumption; study for identical Gothic Revival shells." },
     { id: 100, name: "St. Anne’s Shandon", coords: [51.9031, -8.4751], bucket: "Parish", sign: "The 'Four Faced Liar'; study for iconic campanile and sound integration." },
-];
+]; // <--- This bracket CLOSES the 100 sites.
 
+// --- 3. THE LOGIC ENGINE ---
+
+// This function draws the pins on the map
 function renderPins() {
-    // 1. Safety check: make sure map and data exist
-    if (!map || !churchData) {
-        console.error("Pins failed: Map or ChurchData missing.");
-        return;
-    }
-    // 3. Render Map Pins with correct Scale & Color
+    if (!map || !churchData) return;
     churchData.forEach(function(s) {
         var marker = L.circleMarker(s.coords, {
-            radius: 5, // Smaller, professional radius
+            radius: 5,
             fillColor: colors[s.bucket] || '#3498db', 
             color: '#fff', 
             weight: 1, 
@@ -379,151 +377,118 @@ function renderPins() {
         }).addTo(map);
 
         marker.bindPopup(`
-            <div style="width:220px;">
-                <img src="https://maps.googleapis.com/maps/api/staticmap?center=${s.coords[0]},${s.coords[1]}&zoom=18&size=400x250&maptype=satellite&key=YOUR_KEY" style="width:100%; border-radius:8px;">
-                <h4 style="margin:10px 0 5px 0;">${s.name}</h4>
+            <div style="width:220px; font-family:sans-serif;">
+                <h4 style="margin:0 0 5px 0;">${s.name}</h4>
                 <span style="background:${colors[s.bucket]}; color:white; padding:2px 8px; border-radius:4px; font-size:10px;">${s.bucket}</span>
+                <p style="font-size:11px; margin:10px 0;">${s.sign}</p>
                 <button class="pin-btn" onclick="addFav(${s.id})">Add to Research Folder</button>
             </div>
         `);
     });
+}
 
+// This function switches between Map and Dossier
 function showPage(p) {
-    // 1. Hide every single page first
     document.querySelectorAll('.page').forEach(pg => {
         pg.classList.remove('active-page');
         pg.style.display = 'none'; 
     });
 
-    // 2. Show the one we want
     const target = document.getElementById('page-' + p);
     if (target) {
         target.classList.add('active-page');
         target.style.display = 'block'; 
     }
 
-    // 3. Handle button highlights (Brackets Added Here)
-    document.querySelectorAll('.nav-btns button').forEach(b => {
-        b.classList.remove('btn-active');
-    });
-    
+    document.querySelectorAll('.nav-btns button').forEach(b => b.classList.remove('btn-active'));
     const activeBtn = document.getElementById('btn-' + p);
-    if (activeBtn) {
-        activeBtn.classList.add('btn-active');
-    }
+    if (activeBtn) activeBtn.classList.add('btn-active');
 
-    // 4. If it's the dossier, build the folders
-    if (p === 'dossier') {
-        renderDossier();
-    }
-
-    // 5. CRITICAL: Force map to redraw when switching back
+    if (p === 'dossier') renderDossier();
+    
     if (p === 'map' && map) {
-        setTimeout(() => { 
-            map.invalidateSize(); 
-        }, 100);
+        setTimeout(() => { map.invalidateSize(); }, 100);
     }
 }
 
-    function addFav(id) {
-        var s = churchData.find(x => x.id === id);
-        if(!favorites.find(f => f.id === id)) {
-            favorites.push(s);
-            document.getElementById('count').innerText = favorites.length;
-            renderQueue();
-        }
+// Adds a site to your favorites array
+function addFav(id) {
+    var s = churchData.find(x => x.id === id);
+    if(s && !favorites.find(f => f.id === id)) {
+        favorites.push(s);
+        document.getElementById('count').innerText = favorites.length;
+        renderQueue();
     }
+}
 
-    function renderQueue() {
-        var q = document.getElementById('queue-list');
-        q.innerHTML = favorites.map(s => `
-            <div style="padding:15px; background:#f8f9fa; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--accent);">
-                <b style="font-size:0.9em; display:block;">${s.name}</b>
-                <small style="color:#888;">${s.bucket}</small>
-            </div>
-        `).join('');
-    }
+// Removes a site from favorites
+function removeFav(id) {
+    favorites = favorites.filter(s => s.id !== id);
+    document.getElementById('count').innerText = favorites.length;
+    renderQueue();
+    renderDossier(); 
+}
+
+// Updates the small sidebar list
+function renderQueue() {
+    var q = document.getElementById('queue-list');
+    if(!q) return;
+    q.innerHTML = favorites.map(s => `
+        <div style="padding:10px; background:#f8f9fa; border-radius:8px; margin-bottom:8px; border-left:4px solid ${colors[s.bucket]}">
+            <b style="font-size:12px;">${s.name}</b>
+        </div>
+    `).join('');
+}
+
+// Builds the visual Dossier with folders
 function renderDossier() {
     const grid = document.getElementById('dossier-grid');
     const statsDiv = document.getElementById('dossier-stats');
-    
-    // THE SAFETY GUARD:
-    // If the grid doesn't exist yet, or favorites hasn't been initialized, STOP.
-    if (!grid || !statsDiv) return; 
-    if (!favorites) { favorites = []; } 
+    if (!grid || !statsDiv) return;
 
     grid.innerHTML = '';
-    statsDiv.innerHTML = '';
-
-    if (favorites.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 50px; color: #999;">No sites selected for analysis. Return to map to add precedents.</p>';
-        return;
-    }
-
-    // 1. CALCULATE STATS
+    
+    // Stats Logic
     const total = favorites.length;
-    const modernistCount = favorites.filter(s => s.bucket === 'Modernist').length;
     const uniqueBuckets = [...new Set(favorites.map(s => s.bucket))].length;
-
     statsDiv.innerHTML = `
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #2c3e50;">
-            <small style="color: #888; text-transform: uppercase;">Total Precedents</small>
-            <div style="font-size: 24px; font-weight: bold;">${total}</div>
+        <div style="background:white; padding:15px; border-radius:8px; border-left:4px solid var(--accent); box-shadow:0 2px 5px rgba(0,0,0,0.05)">
+            <small style="color:#888;">Total Precedents</small>
+            <div style="font-size:20px; font-weight:bold;">${total}</div>
         </div>
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #e67e22;">
-            <small style="color: #888; text-transform: uppercase;">Modernist Hulls</small>
-            <div style="font-size: 24px; font-weight: bold;">${modernistCount}</div>
-        </div>
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #27ae60;">
-            <small style="color: #888; text-transform: uppercase;">Typology Diversity</small>
-            <div style="font-size: 24px; font-weight: bold;">${uniqueBuckets} Categories</div>
+        <div style="background:white; padding:15px; border-radius:8px; border-left:4px solid #27ae60; box-shadow:0 2px 5px rgba(0,0,0,0.05)">
+            <small style="color:#888;">Typology Diversity</small>
+            <div style="font-size:20px; font-weight:bold;">${uniqueBuckets} Categories</div>
         </div>
     `;
 
-buckets.forEach(bucket => {
-        const folder = document.createElement('div');
-        folder.className = 'folder-container'; 
+    if (total === 0) {
+        grid.innerHTML = '<p style="text-align:center; width:100%; color:#999; padding:40px;">No sites in research queue.</p>';
+        return;
+    }
 
-        let folderHtml = `
-            <h2 style="margin-top: 0; border-bottom: 3px solid ${colors[bucket] || '#ccc'}; padding-bottom: 10px; font-size: 1.4em;">
-                ${bucket} <span style="font-size: 0.5em; color: #999; margin-left: 10px;">(${favorites.filter(s => s.bucket === bucket).length} Sites)</span>
-            </h2>
-            <div class="folder-contents">`;
-
-        favorites.filter(s => s.bucket === bucket).forEach(s => {
-            // POC Placeholder Image (No API Key Required)
-            const placeholderImg = `https://placehold.co/600x300/e0e0e0/666666?text=${encodeURIComponent(s.name)}`;
-            
-            // Universal Google Maps Link
-            const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${s.coords[0]},${s.coords[1]}`;
-
-            folderHtml += `
-                <div class="card">
-                    <div style="position: relative;">
-                        <img src="${placeholderImg}" style="width:100%; display:block; border-bottom: 1px solid #eee;">
-                        <div style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; border: 1px solid #ddd;">ID: #SITE-${s.id}</div>
-                    </div>
-                    <div class="card-content">
-                        <h3 style="margin: 0 0 10px 0; font-size: 1.1em;">${s.name}</h3>
-                        <p style="font-size: 0.85em; color: #555; line-height: 1.5; margin-bottom: 15px;">${s.sign}</p>
-                        
-                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                            <a href="${googleMapsUrl}" target="_blank" style="flex-grow: 1; text-align: center; padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 11px; font-weight: 700; border: 1px solid #ddd;">
-                                VIEW ON GOOGLE MAPS
-                            </a>
+    // Build Folder Columns
+    buckets.forEach(bucket => {
+        const sites = favorites.filter(s => s.bucket === bucket);
+        if (sites.length > 0) {
+            const folder = document.createElement('div');
+            folder.className = 'folder-container';
+            folder.innerHTML = `
+                <h2 style="border-bottom:3px solid ${colors[bucket]}; padding-bottom:10px;">${bucket}</h2>
+                <div class="folder-contents">
+                    ${sites.map(s => `
+                        <div class="card">
+                            <div class="card-content">
+                                <h3>${s.name}</h3>
+                                <p style="font-size:12px; color:#666;">${s.sign}</p>
+                                <button onclick="removeFav(${s.id})" style="color:red; background:none; border:none; cursor:pointer; font-size:10px; margin-top:10px;">[ REMOVE ]</button>
+                            </div>
                         </div>
-
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; pt: 10px; margin-top: 10px;">
-                            <span style="font-size: 9px; color: #bbb; font-family: monospace;">LAT: ${s.coords[0].toFixed(4)}</span>
-                            <button onclick="removeFav(${s.id})" style="background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 11px; font-weight: 600;">REMOVE</button>
-                        </div>
-                    </div>
-                </div>`;
-        });
-
-        folderHtml += `</div>`; 
-        folder.innerHTML = folderHtml;
-        grid.appendChild(folder);
+                    `).join('')}
+                </div>
+            `;
+            grid.appendChild(folder);
+        }
     });
 }
 </script>
