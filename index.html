@@ -180,18 +180,20 @@
 
     var favorites = [];
     
-    // 1. Define the Color Palette (Add this here)
-var colors = {
-    "Cistercian": "#27ae60",
-    "Benedictine": "#8e44ad",
-    "Modernist": "#e67e22",
-    "Latin Mass": "#c0392b",
-    "Reuse": "#2980b9",
-    "Parish": "#7f8c8d",
-    "Traditional": "#2c3e50", // Added: Deep Navy
-    "Historic": "#795548"      // Added: Earth Brown
-};
+// 1.1 Define the Color Palette
+    var colors = {
+        "Cistercian": "#27ae60",
+        "Benedictine": "#8e44ad",
+        "Modernist": "#e67e22",
+        "Latin Mass": "#c0392b",
+        "Reuse": "#2980b9",
+        "Parish": "#7f8c8d",
+        "Historic": "#795548",
+        "Traditional": "#2c3e50" // Added this to match your ID 50
+    };
 
+    // 1.2 Define the Folder Columns (The "Carpentry")
+    const buckets = ["Cistercian", "Benedictine", "Modernist", "Latin Mass", "Reuse", "Parish", "Historic", "Traditional"];
     // 2.THE MASTER DATABASE (Expand this)
     var churchData = [
     // --- CATEGORY: CISTERCIAN (MONASTIC ROOTS) ---
