@@ -476,15 +476,27 @@ function renderDossier() {
             folder.innerHTML = `
                 <h2 style="border-bottom:3px solid ${colors[bucket]}; padding-bottom:10px;">${bucket}</h2>
                 <div class="folder-contents">
-                    ${sites.map(s => `
+                    ${sites.map(s => {
+                        // Dynamic Google Images Link - Adjusted to focus on Architecture & Ireland
+                        const googleImagesUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(s.name + ' Architecture Ireland')}`;
+                        
+                        return `
                         <div class="card">
                             <div class="card-content">
-                                <h3>${s.name}</h3>
-                                <p style="font-size:12px; color:#666;">${s.sign}</p>
-                                <button onclick="removeFav(${s.id})" style="color:red; background:none; border:none; cursor:pointer; font-size:10px; margin-top:10px;">[ REMOVE ]</button>
+                                <h3 style="margin:0 0 10px 0; font-size: 1.1em;">${s.name}</h3>
+                                <p style="font-size:12px; color:#666; line-height:1.5;">${s.sign}</p>
+                                
+                                <div style="display:flex; gap:8px; margin-top:15px;">
+                                    <a href="${googleImagesUrl}" target="_blank" style="flex:1; text-align:center; padding:10px; background:#2c3e50; color:white; text-decoration:none; border-radius:6px; font-size:10px; font-weight:bold; text-transform:uppercase; letter-spacing:0.5px;">
+                                        View Images
+                                    </a>
+                                    <button onclick="removeFav(${s.id})" style="padding:10px; background:#f0f0f0; color:#e74c3c; border:1px solid #ddd; border-radius:6px; cursor:pointer; font-size:10px; font-weight:bold; text-transform:uppercase;">
+                                        Remove
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    `).join('')}
+                    `}).join('')}
                 </div>
             `;
             grid.appendChild(folder);
