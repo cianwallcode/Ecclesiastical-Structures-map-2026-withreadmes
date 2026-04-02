@@ -439,6 +439,51 @@ function renderPins() {
         `);
     });
 }
+// --- DATASET SWITCHER LOGIC ---
+function switchMapLayer(type) {
+    activeDataset = type;
+    
+    // 1. Clear all existing markers from the map
+    // This prevents church pins and museum pins from overlapping
+    map.eachLayer(function (layer) {
+        if (layer instanceof L.CircleMarker) {
+            map.removeLayer(layer);
+        }
+    });
+
+    // 2. Select the data to draw
+    const dataToDraw = (type === 'churches') ? churchData : museumData;
+    
+    // 3. Define colors for Museums (distinct from ecclesiastical colors)
+    const museumColors = {
+        "National": "#8e44ad", // Purple
+        "Regional": "#16a085", // Teal
+        "Private": "#f39c12"   // Gold
+    };
+
+    // 4. Draw the new pins
+    dataToDraw.forEach(function(s) {
+        // Pick color based on dataset
+        var markerColor = (type === 'churches') ? (colors[s.bucket] || '#3498db') : (museumColors[s.bucket] || '#95a5a6');
+        
+        var marker = L.circleMarker(s.coords, {
+            radius: 6,
+            fillColor: markerColor,
+            color: '#fff',
+            weight: 1,
+            fillOpacity: 0.9
+        }).addTo(map);
+
+        marker.bindPopup(`
+            <div style="width:200px; font-family:sans-serif;">
+                <h4 style="margin:0 0 5px 0;">${s.name}</h4>
+                <span style="background:${markerColor}; color:white; padding:2px 8px; border-radius:4px; font-size:10px;">${s.bucket}</span>
+                <p style="font-size:11px; margin:10px 0;">${s.sign}</p>
+                <button class="pin-btn" onclick="addFav(${s.id})">Add to Research Folder</button>
+            </div>
+        `);
+    });
+}
 
 // This function switches between Map, Dossier, and Research Desk.
 function showPage(p) {
