@@ -528,6 +528,64 @@ function renderDossier() {
         }
     });
 }
+// Syncs the Research Desk dropdown with your current Dossier (favorites)
+function updateDeskDropdown() {
+    const select = document.getElementById('desk-selector');
+    if (!select) return;
+    
+    // Fill the dropdown only with sites you've added to the Dossier
+    select.innerHTML = '<option value="">-- Select Site --</option>' + 
+        favorites.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+}
+
+// Generates the Report UI inside the desk area
+function loadResearchReport(id) {
+    if (!id) return;
+    const s = favorites.find(x => x.id == id);
+    const paper = document.getElementById('report-paper-ui');
+    
+    paper.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid var(--dark); padding-bottom:20px; margin-bottom:40px;">
+            <div>
+                <h1 style="margin:0; font-size:32px; letter-spacing:-1px;">${s.name}</h1>
+                <p style="margin:5px 0 0 0; color:var(--accent); font-weight:bold; font-size:12px; text-transform:uppercase; letter-spacing:1px;">SITE RESEARCH REPORT</p>
+            </div>
+            <div style="text-align:right; font-size:12px; color:#999;">
+                <b>REF: #SITE-${s.id}</b><br>
+                DATE: ${new Date().toLocaleDateString()}
+            </div>
+        </div>
+
+        <h4 style="font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--dark); margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:5px;">I. Statutory Planning Records</h4>
+        <div style="display:grid; grid-template-columns:1fr; gap:12px; margin-bottom:30px;">
+            <a href="https://www.myplan.ie/national-planning-application-map/" target="_blank" style="background:#fff5f5; border-left:5px solid #e74c3c; padding:20px; text-decoration:none; color:black;">
+                <div style="font-weight:bold; font-size:13px; color:#e74c3c;">MYPLAN.IE // NATIONAL PLANNING MAP</div>
+                <div style="font-size:11px; margin-top:4px;">Search history for Coordinates: [${s.coords[0]}, ${s.coords[1]}]</div>
+            </a>
+        </div>
+
+        <h4 style="font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--dark); margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:5px;">II. Land & Environmental Portals</h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:30px;">
+            <a href="https://www.landdirect.ie/" target="_blank" style="background:#f0f7ff; border-left:4px solid #005596; padding:15px; text-decoration:none; color:black; font-size:12px;"><b>LANDDIRECT</b><br>Ownership Search</a>
+            <a href="https://www.floodinfo.ie/map/floodmaps/" target="_blank" style="background:#f0fff7; border-left:4px solid #007a3d; padding:15px; text-decoration:none; color:black; font-size:12px;"><b>FLOODMAPS</b><br>OPW Risk Data</a>
+            <a href="https://www.arcgis.com/apps/webappviewer/index.html?id=3ae19cc156bf4706a929304bf8fcc4f6" target="_blank" style="background:#faf7f4; border-left:4px solid #8e735b; padding:15px; text-decoration:none; color:black; font-size:12px;"><b>GEOHIVE</b><br>Historic OSI</a>
+            <a href="http://gis.teagasc.ie/soils/map.php" target="_blank" style="background:#f7faf2; border-left:4px solid #5d8233; padding:15px; text-decoration:none; color:black; font-size:12px;"><b>TEAGASC</b><br>Soil Typology</a>
+        </div>
+
+        <h4 style="font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--dark); margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:5px;">III. Geographic Specifications</h4>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:30px; font-size:14px;">
+            <tr style="border-bottom:1px solid #f9f9f9;"><td style="padding:12px 0; color:#999; font-size:11px;">COORDINATES</td><td><b>${s.coords[0]}, ${s.coords[1]}</b></td></tr>
+            <tr style="border-bottom:1px solid #f9f9f9;"><td style="padding:12px 0; color:#999; font-size:11px;">TYPOLOGY</td><td>${s.bucket} Structure</td></tr>
+        </table>
+
+        <h4 style="font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--dark); margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:5px;">IV. Desk Research Notes</h4>
+        <div style="background:#f9f9f9; padding:25px; border-radius:4px; font-family:serif; font-style:italic; line-height:1.8; border:1px solid #eee; font-size:15px; color:#34495e;">
+            "${s.sign}"
+        </div>
+
+        <button onclick="window.print()" style="margin-top:60px; width:100%; padding:20px; background:var(--dark); color:white; border:none; cursor:pointer; font-weight:bold; letter-spacing:2px; text-transform:uppercase;">Generate Report PDF</button>
+    `;
+}
 </script>
 </body>
 </html>
