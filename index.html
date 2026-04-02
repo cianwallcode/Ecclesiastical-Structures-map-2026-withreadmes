@@ -412,26 +412,34 @@ function renderPins() {
     });
 }
 
-// This function switches between Map and Dossier
+// This function switches between Map, Dossier, and Research Desk.
 function showPage(p) {
+    // 1. Hide all pages
     document.querySelectorAll('.page').forEach(pg => {
         pg.classList.remove('active-page');
         pg.style.display = 'none'; 
     });
 
+    // 2. Show the selected page
     const target = document.getElementById('page-' + p);
     if (target) {
         target.classList.add('active-page');
         target.style.display = 'block'; 
     }
 
+    // 3. Update the navigation buttons to show which one is active
     document.querySelectorAll('.nav-btns button').forEach(b => b.classList.remove('btn-active'));
     const activeBtn = document.getElementById('btn-' + p);
     if (activeBtn) activeBtn.classList.add('btn-active');
 
+    // 4. Run the specific setup for each page
     if (p === 'dossier') renderDossier();
     
+    // This is the new "Bridge" line that populates the Research Desk
+    if (p === 'desk') updateDeskDropdown(); 
+    
     if (p === 'map' && map) {
+        // This ensures the map doesn't look gray or broken when you switch back to it
         setTimeout(() => { map.invalidateSize(); }, 100);
     }
 }
