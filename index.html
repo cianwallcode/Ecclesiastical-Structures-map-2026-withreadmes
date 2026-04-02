@@ -445,6 +445,45 @@ function showPage(p) {
         target.classList.add('active-page');
         target.style.display = 'block'; 
     }
+    // --- NEW SITE INTAKE LOGIC ---
+function commitFromMap() {
+    const name = document.getElementById('map-entry-name').value;
+    const lat = parseFloat(document.getElementById('map-entry-lat').value);
+    const lng = parseFloat(document.getElementById('map-entry-lng').value);
+    const notes = document.getElementById('map-entry-notes').value;
+
+    if(!name || isNaN(lat) || isNaN(lng)) {
+        alert("Action Required: Please provide a Site Name and valid GPS Coordinates.");
+        return;
+    }
+
+    const newSite = {
+        id: Date.now(),
+        name: name,
+        coords: [lat, lng],
+        bucket: "Modernist", 
+        sign: notes || "Field entry recorded via SiteVault intake."
+    };
+
+    churchData.push(newSite);
+    favorites.push(newSite);
+
+    // Refresh everything
+    renderPins();
+    renderQueue();
+    if(typeof renderDossier === "function") renderDossier();
+    if(typeof updateDeskDropdown === "function") updateDeskDropdown();
+    
+    document.getElementById('count').innerText = favorites.length;
+
+    // Clear the intake bar
+    document.getElementById('map-entry-name').value = '';
+    document.getElementById('map-entry-lat').value = '';
+    document.getElementById('map-entry-lng').value = '';
+    document.getElementById('map-entry-notes').value = '';
+
+    alert(`${name} committed to SiteVault.`);
+}
 
     // 3. Update the navigation buttons to show which one is active
     document.querySelectorAll('.nav-btns button').forEach(b => b.classList.remove('btn-active'));
