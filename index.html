@@ -406,6 +406,16 @@ nav {
     { id: 100, name: "St. Anne’s Shandon", coords: [51.9031, -8.4751], bucket: "Parish", sign: "The 'Four Faced Liar'; study for iconic campanile and sound integration." },
 ]; // <--- This bracket CLOSES the 100 sites.
 
+// --- NEW DATASET: MUSEUMS ---
+const museumData = [
+    { id: 201, name: "National Museum of Ireland", coords: [53.3402, -6.2552], bucket: "National", sign: "Archaeology and History collection." },
+    { id: 202, name: "Hunt Museum", coords: [52.6651, -8.6251], bucket: "Regional", sign: "Antiquities and fine art in a former Custom House." }
+    // ... add more museums here
+];
+
+// We need a variable to track which layer is "Active"
+let activeDataset = 'churches';
+
 // --- 3. THE LOGIC ENGINE ---
 
 // This function draws the pins on the map
