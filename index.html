@@ -7,27 +7,36 @@
         :root { --accent: #3498db; --dark: #1a1a1a; --bg: #f8f9fa; --card-bg: #ffffff; }
         body { margin: 0; font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: #333; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        /* Professional Navigation */
-        nav { background: var(--dark); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; color: white; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .logo { font-weight: 800; font-size: 1.4em; letter-spacing: -0.5px; text-transform: uppercase; }
-        .nav-btns button { margin-left: 15px; padding: 10px 24px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; background: transparent; color: white; font-weight: 600; transition: 0.3s; }
-        .nav-btns button:hover { background: rgba(255,255,255,0.1); }
-        .btn-active { background: var(--accent) !important; border-color: var(--accent) !important; }
-
+/* Professional Navigation */
+nav { 
+    background: var(--dark); 
+    padding: 15px 40px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    color: white; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+    
+    /* THE FIX: Sticky & High Z-Index */
+    position: sticky; 
+    top: 0; 
+    z-index: 2000; 
+}
         /* App Layout */
 .page { display: none; min-height: 100vh; width: 100%; }
-.active-page { display: block !important; visibility: visible !important; opacity: 1 !important; }
-
-        /* Map UI */
-        #map { flex-grow: 1; height: 100%; }
-        #sidebar { width: 360px; background: white; border-left: 1px solid #e0e0e0; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; }
-        
+.active-page { 
+    display: block !important; 
+    position: relative; 
+    z-index: 1; 
+}  
 /* The background of the Dossier page */
 #page-dossier {
-    display: none; /* Controlled by your JS nav */
-    padding: 60px 40px;
-    background: #f4f5f7 !important; /* Ensure it's not white-on-white */
+    display: none; /* Controlled by JS */
+    width: 100%;
     min-height: 100vh;
+    background: #f4f5f7;
+    overflow-y: auto;
+    padding-top: 20px; /* Gives space under the nav */
 }
 
 /* The actual Side-by-Side container */
