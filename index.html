@@ -196,6 +196,30 @@ nav {
 
 <div id="dossier-grid" style="display: flex; gap: 20px; padding: 20px; overflow-x: auto;"></div>
 </div>
+<div id="page-desk" class="page" style="display:none;">
+    <div style="display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 80px);">
+        <div style="background: var(--dark); color: white; padding: 30px; border-right: 4px solid var(--accent);">
+            <h3 style="margin-top:0; font-size:14px; letter-spacing:1px; color:var(--accent);">INVENTORY SELECTOR</h3>
+            <p style="font-size:12px; color:#aaa; margin-bottom:20px;">Select a site from your research to compile a desk report.</p>
+            
+            <select id="desk-selector" onchange="loadResearchReport(this.value)" style="width:100%; padding:12px; background:#333; color:white; border:1px solid #555; border-radius:4px; font-weight:bold;">
+                <option value="">-- Select Site --</option>
+            </select>
+            
+            <div style="margin-top:30px; font-size:11px; line-height:1.6; color:#888; border-top:1px solid #444; padding-top:20px;">
+                <b>Workflow:</b> Portals will open in new tabs. Cross-reference coordinates [Lat, Long] found in the report.
+            </div>
+        </div>
+
+        <div id="desk-display" style="background: #f4f4f4; padding: 40px; overflow-y: auto;">
+            <div id="report-paper-ui" style="background:white; max-width:800px; margin:0 auto; min-height:1000px; padding:60px; box-shadow:0 10px 30px rgba(0,0,0,0.05); border-top:8px solid var(--dark);">
+                <div style="text-align:center; padding-top:150px; color:#ccc;">
+                    <h2>RESEARCH DESK READY</h2>
+                    <p>Select a site from the left to generate data.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div> <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
     // 1. Declare variables globally so all functions can see them
