@@ -237,49 +237,81 @@ nav {
     <button onclick="commitFromMap()" style="background:var(--dark); color:white; border:none; padding:12px 20px; font-weight:bold; border-radius:4px; cursor:pointer; height:40px;">+ COMMIT SITE</button>
 </div>
 
-<div id="page-dossier" class="page">
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 30px; border-bottom: 1px solid #eee; background: white;">
-        <div>
-            <h1 style="margin:0; font-size: 2em; letter-spacing: -1px;">Architectural Site Dossier</h1>
-            <p style="margin: 5px 0 0 0; color: #666;">2026 Synthesis: Modernist Hulls</p>
-        </div>
-        
-        <button onclick="window.print()" style="padding: 12px 24px; background: #2c3e50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; white-space: nowrap;">
-            Generate PDF
-        </button>
-    </div>
+<div id="page-dossier" class="page" style="display: none; height: calc(100vh - 60px); overflow: hidden;">
+    
+    <div id="workbench-wrapper" style="display: grid; grid-template-columns: 280px 1fr 320px; height: 100%; background: #1a1a1a;">
 
-    <div id="dossier-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px;">
-        </div>
+        <aside style="background: #252525; border-right: 1px solid #333; padding: 25px; display: flex; flex-direction: column; gap: 25px; overflow-y: auto;">
+            <h3 style="font-size: 10px; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; margin-bottom: 10px;">Classification System</h3>
+            
+            <section>
+                <label style="font-size: 11px; color: #888; font-weight: bold; display: block; margin-bottom: 12px;">MATERIAL COMPOSITION</label>
+                <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #ccc;">
+                    <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" checked> Reinforced Concrete</label>
+                    <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox"> Ashlar Masonry</label>
+                    <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox"> Timber Glulam</label>
+                    <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox"> Steel / Glass</label>
+                </div>
+            </section>
 
-<div id="dossier-grid" style="display: flex; gap: 20px; padding: 20px; overflow-x: auto;"></div>
-</div>
-<div id="page-desk" class="page" style="display:none;">
-    <div style="display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 80px);">
-        <div style="background: var(--dark); color: white; padding: 30px; border-right: 4px solid var(--accent);">
-            <h3 style="margin-top:0; font-size:14px; letter-spacing:1px; color:var(--accent);">INVENTORY SELECTOR</h3>
-            <p style="font-size:12px; color:#aaa; margin-bottom:20px;">Select a site from your research to compile a desk report.</p>
-            
-            <select id="desk-selector" onchange="loadResearchReport(this.value)" style="width:100%; padding:12px; background:#333; color:white; border:1px solid #555; border-radius:4px; font-weight:bold;">
-                <option value="">-- Select Site --</option>
-            </select>
-            
-            <div style="margin-top:30px; font-size:11px; line-height:1.6; color:#888; border-top:1px solid #444; padding-top:20px;">
-                <b>Workflow:</b> Portals will open in new tabs. Cross-reference coordinates [Lat, Long] found in the report.
+            <section>
+                <label style="font-size: 11px; color: #888; font-weight: bold; display: block; margin-bottom: 12px;">STYLISTIC TYPOLOGY</label>
+                <select style="width: 100%; background: #333; color: white; border: 1px solid #444; padding: 10px; border-radius: 4px; font-size: 12px;">
+                    <optgroup label="Modernist">
+                        <option>Brutalist</option>
+                        <option>International Style</option>
+                    </optgroup>
+                    <optgroup label="Ecclesiastical">
+                        <option>Hiberno-Romanesque</option>
+                        <option>Gothic Revival</option>
+                    </optgroup>
+                </select>
+            </section>
+
+            <section style="margin-top: auto; padding: 20px; background: rgba(0,0,0,0.2); border: 1px dashed #444; border-radius: 4px;">
+                <p style="font-size: 10px; color: #666; margin-bottom: 10px; text-transform: uppercase;">Relational Mapping</p>
+                <button onclick="activateGraphMode()" style="width: 100%; padding: 10px; background: var(--accent); border: none; color: white; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 2px;">
+                    OPEN GRAPH VIEW (NODES)
+                </button>
+            </section>
+        </aside>
+
+        <main style="position: relative; background: #111; display: flex; justify-content: center; align-items: center;">
+            <div id="graph-view" style="text-align: center; opacity: 0.3;">
+                <div style="font-size: 40px; color: #444;">[GRAPH NODE NETWORK]</div>
+                <p style="font-size: 11px; color: #666; margin-top: 10px; letter-spacing: 3px;">RELATIONAL DATABASE ACTIVE</p>
             </div>
-        </div>
 
-        <div id="desk-display" style="background: #f4f4f4; padding: 40px; overflow-y: auto;">
-            <div id="report-paper-ui" style="background:white; max-width:800px; margin:0 auto; min-height:1000px; padding:60px; box-shadow:0 10px 30px rgba(0,0,0,0.05); border-top:8px solid var(--dark);">
-                <div style="text-align:center; padding-top:150px; color:#ccc;">
-                    <h2>RESEARCH DESK READY</h2>
-                    <p>Select a site from the left to generate data.</p>
+            <div id="node-inspector" style="position: absolute; bottom: 20px; left: 20px; background: rgba(255,255,255,0.95); width: 300px; padding: 20px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none;">
+                </div>
+        </main>
+
+        <aside style="background: #252525; border-left: 1px solid #333; display: flex; flex-direction: column;">
+            <div style="padding: 20px; background: #1a1a1a; border-bottom: 1px solid #333;">
+                <h3 style="font-size: 10px; letter-spacing: 2px; color: #888; text-transform: uppercase;">Research Inbox</h3>
+                <div style="margin-top: 15px; display: flex; gap: 8px;">
+                    <input type="text" id="scraper-input" placeholder="NIAH or Image URL..." style="flex: 1; background: #000; border: 1px solid #444; color: #0f0; padding: 10px; font-size: 11px; font-family: monospace;">
+                    <button onclick="simulateScraper()" style="background: #444; border: none; color: white; padding: 0 15px; cursor: pointer;">FETCH</button>
                 </div>
             </div>
-        </div>
+
+            <div id="inbox-queue" style="flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px;">
+                <div class="pending-card" style="background: #1e1e1e; border: 1px solid #333; padding: 15px; border-top: 3px solid #e67e22;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <h4 style="margin: 0; font-size: 13px; color: #eee;">St. Kevin's (Pending)</h4>
+                        <span style="font-size: 9px; background: #e67e22; color: #000; padding: 2px 5px; font-weight: bold;">AGENCY DATA</span>
+                    </div>
+                    <p style="font-size: 11px; color: #888; margin: 10px 0;">Agent found construction link: <strong>Portland Stone</strong>.</p>
+                    <div style="display: flex; gap: 5px;">
+                        <button style="flex: 1; background: #27ae60; border: none; color: white; padding: 5px; font-size: 10px; cursor: pointer;">APPROVE</button>
+                        <button style="flex: 1; background: #333; border: none; color: white; padding: 5px; font-size: 10px; cursor: pointer;">DISMISS</button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
     </div>
-</div> <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
+</div>
     // 1. Declare variables globally so all functions can see them
     var map;
     var favorites = [];
