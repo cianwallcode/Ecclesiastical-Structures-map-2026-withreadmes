@@ -641,68 +641,103 @@ function renderQueue() {
     `).join('');
 }
 
-// Builds the visual Dossier with folders
-function renderDossier() {
-    const grid = document.getElementById('dossier-grid');
-    const statsDiv = document.getElementById('dossier-stats');
-    if (!grid || !statsDiv) return;
+// --- 1. THE AGENT SCRAPER (Intake Pipeline) ---
+function simulateScraper() {
+    const url = document.getElementById('scraper-input').value;
+    if(!url) return alert("Enter a URL (e.g. NIAH or Archive link)");
 
-    grid.innerHTML = '';
-    
-    // Stats Logic
-    const total = favorites.length;
-    const uniqueBuckets = [...new Set(favorites.map(s => s.bucket))].length;
-    statsDiv.innerHTML = `
-        <div style="background:white; padding:15px; border-radius:8px; border-left:4px solid var(--accent); box-shadow:0 2px 5px rgba(0,0,0,0.05)">
-            <small style="color:#888;">Total Precedents</small>
-            <div style="font-size:20px; font-weight:bold;">${total}</div>
-        </div>
-        <div style="background:white; padding:15px; border-radius:8px; border-left:4px solid #27ae60; box-shadow:0 2px 5px rgba(0,0,0,0.05)">
-            <small style="color:#888;">Typology Diversity</small>
-            <div style="font-size:20px; font-weight:bold;">${uniqueBuckets} Categories</div>
+    const inbox = document.getElementById('inbox-queue');
+    const tempId = Date.now();
+
+    // Create the 'Pending' card
+    const draft = document.createElement('div');
+    draft.innerHTML = `
+        <div id="draft-${tempId}" style="background: #111; border: 1px solid #333; border-top: 3px solid #e67e22; padding: 15px; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: #e67e22; font-weight: bold; margin-bottom: 8px;">
+                <span>AGENT DATA DETECTED</span>
+                <span>${new Date().toLocaleTimeString()}</span>
+            </div>
+            <h4 style="margin: 0; color: #fff; font-size: 13px;">Proposed: ${url.split('/').pop() || 'New Discovery'}</h4>
+            <p style="font-size: 11px; color: #777; margin: 8px 0;">Scanning metadata for: <b>Material & Typology</b>...</p>
+            <div style="display: flex; gap: 5px;">
+                <button onclick="approveSite(${tempId})" style="flex:1; background:#27ae60; color:white; border:none; padding:6px; cursor:pointer; font-size:10px; font-weight:bold;">APPROVE</button>
+                <button onclick="this.closest('div').parentElement.remove()" style="flex:1; background:#333; color:#888; border:none; padding:6px; cursor:pointer; font-size:10px;">REJECT</button>
+            </div>
         </div>
     `;
+    inbox.prepend(draft);
+    document.getElementById('scraper-input').value = '';
+}
 
-    if (total === 0) {
-        grid.innerHTML = '<p style="text-align:center; width:100%; color:#999; padding:40px;">No sites in research queue.</p>';
-        return;
-    }
+// --- 2. APPROVAL & DATABASE COMMIT ---
+function approveSite(tempId) {
+    // This moves the data from the 'Inbox' to your 'Main Database'
+    const newEntry = {
+        id: tempId,
+        name: "Verified Architectural Site",
+        coords: [53.34, -6.26], // Agent would provide actual coords
+        material: "Reinforced Concrete",
+        style: "Brutalist",
+        sign: "Verified via Scraper Agent 2026."
+    };
 
-    // Build Folder Columns
-    buckets.forEach(bucket => {
-        const sites = favorites.filter(s => s.bucket === bucket);
-        if (sites.length > 0) {
-            const folder = document.createElement('div');
-            folder.className = 'folder-container';
-            folder.innerHTML = `
-                <h2 style="border-bottom:3px solid ${colors[bucket]}; padding-bottom:10px;">${bucket}</h2>
-                <div class="folder-contents">
-                    ${sites.map(s => {
-                        // Dynamic Google Images Link - Adjusted to focus on Architecture & Ireland
-                        const googleImagesUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(s.name + ' Architecture Ireland')}`;
-                        
-                        return `
-                        <div class="card">
-                            <div class="card-content">
-                                <h3 style="margin:0 0 10px 0; font-size: 1.1em;">${s.name}</h3>
-                                <p style="font-size:12px; color:#666; line-height:1.5;">${s.sign}</p>
-                                
-                                <div style="display:flex; gap:8px; margin-top:15px;">
-                                    <a href="${googleImagesUrl}" target="_blank" style="flex:1; text-align:center; padding:10px; background:#2c3e50; color:white; text-decoration:none; border-radius:6px; font-size:10px; font-weight:bold; text-transform:uppercase; letter-spacing:0.5px;">
-                                        View Images
-                                    </a>
-                                    <button onclick="removeFav(${s.id})" style="padding:10px; background:#f0f0f0; color:#e74c3c; border:1px solid #ddd; border-radius:6px; cursor:pointer; font-size:10px; font-weight:bold; text-transform:uppercase;">
-                                        Remove
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    `}).join('')}
+    churchData.push(newEntry); // Add to main list
+    document.getElementById(`draft-${tempId}`).remove(); // Remove from inbox
+    renderWorkbenchList(); // Refresh the display
+    if(map) renderPins(); // Update the map too
+}
+
+// --- 3. WORKBENCH FILTER & DISPLAY ---
+function renderWorkbenchList() {
+    const canvas = document.getElementById('active-site-report');
+    
+    // Clear and show the 'empty' state if no site is clicked
+    canvas.innerHTML = `
+        <div style="text-align:center; padding-top:100px; color:#ccc;">
+            <h1 style="letter-spacing:10px; font-size:12px; color:#888;">ARCHITECTURAL RECORD</h1>
+            <p style="font-family:serif; italic; font-size:18px;">Select a verified site from the database to view technical dossier.</p>
+        </div>
+    `;
+}
+
+// --- 4. SITE INSPECTOR (The 'Center Pane' Report) ---
+function openTechnicalDossier(siteId) {
+    const site = churchData.find(s => s.id == siteId) || museumData.find(s => s.id == siteId);
+    if(!site) return;
+
+    const canvas = document.getElementById('active-site-report');
+    canvas.innerHTML = `
+        <div style="color: #2c3e50; font-family: 'Georgia', serif;">
+            <div style="display:flex; justify-content:space-between; border-bottom:2px solid #2c3e50; padding-bottom:10px;">
+                <h1 style="margin:0; text-transform:uppercase;">${site.name}</h1>
+                <span style="font-weight:bold; color:var(--accent);">ID: ${site.id}</span>
+            </div>
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-top:30px;">
+                <div>
+                    <label style="font-size:10px; font-weight:bold; color:#999; text-transform:uppercase;">Materiality</label>
+                    <p style="font-size:16px;">${site.material || 'Unspecified Masonry'}</p>
                 </div>
-            `;
-            grid.appendChild(folder);
-        }
-    });
+                <div>
+                    <label style="font-size:10px; font-weight:bold; color:#999; text-transform:uppercase;">Taxonomy</label>
+                    <p style="font-size:16px;">${site.style || site.bucket}</p>
+                </div>
+            </div>
+
+            <div style="margin-top:40px; padding:20px; background:#f9f9f9; border-left:5px solid #2c3e50;">
+                <h4 style="margin:0 0 10px 0;">Field Notes</h4>
+                <p style="line-height:1.6;">${site.sign}</p>
+            </div>
+
+            <div style="margin-top:50px;">
+                <label style="font-size:10px; font-weight:bold; color:#999; text-transform:uppercase;">Relational Links (Obsidian Graph)</label>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <span style="padding:5px 10px; background:#eee; font-size:11px; border-radius:20px;">#SameArchitect</span>
+                    <span style="padding:5px 10px; background:#eee; font-size:11px; border-radius:20px;">#MassConcrete</span>
+                </div>
+            </div>
+        </div>
+    `;
 }
 // Syncs the Research Desk dropdown with your current Dossier (favorites)
 function updateDeskDropdown() {
